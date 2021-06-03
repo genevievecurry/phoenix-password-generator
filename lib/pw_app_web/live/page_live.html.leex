@@ -1,0 +1,73 @@
+<form phx-change="generate">
+  <h1>Password Generator</h1>
+  <div class="password-output"><pre><%= @output %></pre></div>
+  <div class="password-strength">
+    <label for="strength">Password Strength</label>
+    <progress id="strength" max="100" value="<%= @analysis.strength %>"> <%= @analysis.strength %>% </progress>
+    <div><%= @analysis.strength %>/100</div>
+  </div>
+  <section class="flex">
+    <div class="flex">
+      <input name="type" value="memorable" type="radio" id="memorable" <%= if @type == "memorable", do: "checked" %>>
+      <label for="memorable">Memorable</label>
+    </div>
+    <div class="flex">
+      <input name="type" value="random" type="radio" id="random" <%= if @type == "random", do: "checked" %>>
+      <label for="random">Random</label>
+    </div>
+    <div class="flex">
+      <input name="type" value="pin" type="radio" id="pin" <%= if @type == "pin", do: "checked" %>>
+      <label for="pin">PIN</label>
+    </div>
+  </section>
+  <hr/>
+  <section>
+    <div class="flex" style="<%= if @type != "memorable", do: "display: none" %>">
+      <%= label(:options, :word_count, "Word Count") %>
+      <div class="flex">
+        <%= range_input(:options, :word_count, [min: 3, max: 15, value: @options.word_count]) %>
+        <span><%= @options.word_count %></span>
+      </div>
+    </div>
+    <div class="flex" style="<%= if @type != "pin", do: "display: none" %>">
+      <%= label(:options, :pin_length, "PIN Length") %>
+      <div class="flex">
+        <%= range_input(:options, :pin_length, [min: 3, max: 16, value: @options.pin_length]) %>
+        <span><%= @options.pin_length %></span>
+      </div>
+    </div>
+    <div class="flex" style="<%= if @type != "random", do: "display: none" %>">
+      <%= label(:options, :character_count, "Character Count") %>
+      <div class="flex">
+        <%= range_input(:options, :character_count, [min: 8, max: 100, value: @options.character_count]) %>
+        <span><%= @options.character_count %></span>
+      </div>
+    </div>
+  </section>
+
+  <section style="<%= if @type != "memorable", do: "display: none" %>">
+    <hr/>
+    <div>
+      <%= label(:options, :separator_type, "Word Separator Type") %>
+      <%= select(:options, :separator_type, Enum.map(@separator_types, fn {key, _value} -> [key: Atom.to_string(key) |> String.capitalize(), value: key] end), selected: @options.separator_type) %>
+    </div>
+     <hr/>
+  </section>
+
+  <section>
+    <div class="flex" style="<%= if @type == "pin" or @type == "", do: "display: none" %>">
+      <%= checkbox :options, :numbers, value: @options.numbers %>
+      <%= label(:options, :numbers, "Include Numbers") %>
+    </div>
+
+    <div class="flex" style="<%= if @type == "pin" or @type == "", do: "display: none" %>">
+      <%= checkbox :options, :symbols, value: @options.symbols %>
+      <%= label(:options, :symbols, "Include Symbols") %>
+    </div>
+
+    <div class="flex" style="<%= if @type != "memorable", do: "display: none" %>">
+      <%= checkbox :options, :uppercase, value: @options.uppercase %>
+      <%= label(:options, :uppercase, "Include Uppercase") %>
+    </div>
+  </section>
+</form>
