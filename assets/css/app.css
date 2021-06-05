@@ -1,0 +1,54 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+@import "./general.css";
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 225px 50px 50px 50px 225px auto;
+  grid-template-rows: 100px 50px 50px 50px 50px auto auto;
+  gap: 0px 0px;
+}
+.grid-item-first {
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+.grid-item-first-options {
+  grid-row-start: 2;
+  grid-row-end: 6;
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+.grid-item-strength {
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 5;
+  grid-column-end: 7;
+}
+.grid-item-strength-label {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 5;
+  grid-column-end: 7;
+}
+.grid-item-next {
+  grid-row-start: 3;
+  grid-row-end: 5;
+  grid-column-start: 3;
+  grid-column-end: 6;
+}
+.grid-item-next-options {
+  grid-row-start: 4;
+  grid-row-end: 7;
+  grid-column-start: 3;
+  grid-column-end: 7;
+}
+
+label {
+  @apply font-serif text-lg;
+}

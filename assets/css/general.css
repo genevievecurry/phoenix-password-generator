@@ -1,6 +1,3 @@
-/* This file is for your main application css. */
-@import "./phoenix.css";
-
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
 .phx-no-feedback .invalid-feedback {
@@ -86,26 +83,4 @@
   color: #a94442;
   display: block;
   margin: -1rem 0 2rem;
-}
-
-.flex {
-  display: flex;
-  label {
-    margin: 0 10px;
-  }
-}
-
-.password-output {
-  margin: 20px 0;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.password-strength {
-  border: 1px solid #eee;
-  padding: 20px;
-  margin: 20px 0;
-  progress {
-    width: 100%;
-  }
 }
