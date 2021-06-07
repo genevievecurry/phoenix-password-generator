@@ -17,8 +17,25 @@ defmodule PwAppWeb.PageLive do
       |> assign(:output, password.output)
       |> assign(:analysis, password.analysis)
       |> assign(:separator_types, @separator_types)
+      |> assign(:output_class, "")
 
     {:ok, socket}
+  end
+
+  def output_class(output) do
+    cond do
+      output < 50 ->
+        "text-4xl"
+
+      output >= 50 and output < 100 ->
+        "text-2xl"
+
+      output >= 100 and output < 150 ->
+        "text-xl"
+
+      true ->
+        "text-lg"
+    end
   end
 
   @impl true
@@ -57,7 +74,8 @@ defmodule PwAppWeb.PageLive do
        type: results.type,
        options: results.options,
        output: results.output,
-       analysis: results.analysis
+       analysis: results.analysis,
+       output_class: output_class(String.length(results.output))
      )}
   end
 end

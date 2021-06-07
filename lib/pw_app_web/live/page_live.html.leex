@@ -1,100 +1,133 @@
 <form phx-change="generate">
-  <div class="grid-container">
+  <div class="grid-container lg:overflow-x-hidden <%= if @type == "", do: "no-type overflow-x-hidden", else: "has-type" %>">
     <div class="grid-item-first bg-white flex items-center">
       <div class="px-8">
         <h2 class="font-serif text-5xl text-purple-dark">First</h2>
         <p class="font-light text-purple-dark text-sm">What type of password do you need?</p>
       </div>
     </div>
-    <div class="grid-item-strength bg-white">
+    <div class="grid-item-strength bg-white slide-in">
       <div class="relative h-full w-full">
-        <div class="absolute inset-x-0 top-0 text-left h-full text-white p-2 transition-all bg-lime flex items-center px-8" style="width: <%= @analysis.strength %>%; background-size: 768px">
-          <%= if @output !== "", do: @output, else: "Cool"  %>
+        <div class="absolute inset-x-0 top-0 h-full text-white transition-all bg-lime flex items-center py-2 px-8" style="width: <%= @analysis.strength %>%"></div>
+        <div class="absolute inset-x-0 top-0 text-left h-full text-white flex items-center py-2 px-8">
+          <span class="block break-words max-w-full <%= @output_class %> text-purple-dark font-mono <%= if @output == "", do: "hidden" %>">
+            <%= @output %>
+          </span>
         </div>
       </div>
     </div>
-    <div class="grid-item-strength-label flex items-center px-8">
+    <div class="grid-item-strength-label flex items-center px-8 slide-in">
       <span class="whitespace-nowrap font-serif text-white text-right w-full block">
-        <%= @analysis.strength %>% <strong class="">awesome</strong> Stronger --->
+        This password is <%= @analysis.strength %>% <strong class="">awesome</strong>.
       </span>
     </div>
     <div class="grid-item-first-options bg-pink">
       <div class="p-8">
-        <label class="password-type" for="memorable">
+        <label class="radio-style" for="memorable">
           <input name="type" value="memorable" type="radio" id="memorable" class="hidden" <%= if @type == "memorable", do: "checked" %>>
-          <div class="">
-            <span class="">Memorable</span>
-          </div>
+          <div><span>Memorable</span></div>
         </label>
-        <label class="password-type" for="random">
+        <label class="radio-style" for="random">
           <input name="type" value="random" type="radio" id="random" class="hidden" <%= if @type == "random", do: "checked" %>>
-          <div class="">
-            <span class="">Random</span>
-          </div>
+          <div><span>Random</span></div>
         </label>
-        <label class="password-type" for="pin">
+        <label class="radio-style" for="pin">
           <input name="type" value="pin" type="radio" id="pin" class="hidden" <%= if @type == "pin", do: "checked" %>>
-          <div class="">
-            <span class="">PIN</span>
-          </div>
+          <div><span>PIN</span></div>
         </label>
       </div>
     </div>
-    <div class="grid-item-next bg-white z-10 flex items-center">
-      <div class="px-8">
-        <h2 class="font-serif text-5xl text-purple-dark">Next</h2>
-        <p class="font-light text-purple-dark text-sm">Adjust it to your requirements.</p>
+
+    <div class="grid-item-next-options bg-pink relative slide-in">
+      <div class="bg-white absolute left-0 transform -translate-y-2/4 z-10 flex items-center h-100">
+        <div class="px-8">
+          <h2 class="font-serif text-5xl text-purple-dark">Next</h2>
+          <p class="font-light text-purple-dark text-sm">Adjust it to your requirements.</p>
+        </div>
       </div>
-    </div>
-    <div class="grid-item-next-options bg-pink">
       <div class="p-8 mt-14">
         <section>
-          <div class="my-4 w-full <%= if @type != "memorable", do: "hidden" %>">
+          <div class="mb-6 w-full <%= if @type != "memorable", do: "hidden" %>">
             <%= label(:options, :word_count, "How many words?") %>
-            <div class="flex mt-2 w-full">
+            <div class="flex mt-2 w-full items-center">
               <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.word_count %></span>
               <%= range_input(:options, :word_count, [min: 3, max: 15, value: @options.word_count, class: "flex-grow"]) %>
             </div>
           </div>
-          <div class="my-4 w-full <%= if @type != "pin", do: "hidden" %>">
+          <div class="mb-6 w-full <%= if @type != "pin", do: "hidden" %>">
             <%= label(:options, :pin_length, "PIN Length") %>
-            <div class="flex mt-2 w-full">
+            <div class="flex mt-2 w-full items-center">
               <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.pin_length %></span>
               <%= range_input(:options, :pin_length, [min: 3, max: 16, value: @options.pin_length, class: "flex-grow"]) %>
             </div>
           </div>
-          <div class="my-4 w-full <%= if @type != "random", do: "hidden" %>">
+          <div class="mb-6 w-full <%= if @type != "random", do: "hidden" %>">
             <%= label(:options, :character_count, "Character Count") %>
-            <div class="flex mt-2 w-full">
+            <div class="flex mt-2 w-full items-center">
               <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.character_count %></span>
               <%= range_input(:options, :character_count, [min: 8, max: 100, value: @options.character_count, class: "flex-grow"]) %>
             </div>
           </div>
-        </section>
 
-        <section class="<%= if @type != "memorable", do: "hidden" %>">
-          <div>
-            <%= label(:options, :separator_type, "Word Separator Type") %>
-            <%= select(:options, :separator_type, Enum.map(@separator_types, fn {key, _value} -> [key: Atom.to_string(key) |> String.capitalize(), value: key] end), selected: @options.separator_type) %>
+          <div class="mb-6 <%= if @type != "memorable", do: "hidden" %>">
+            <span class="font-serif block text-lg">What goes between the words?</span>
+            <div class="flex space-x-4 items-stretch mt-2">
+              <%= Enum.map @separator_types, fn {key, _value} -> %>
+                <label class="separator-type flex flex-1 items-center justify-center">
+                    <%= radio_button(:options, :separator_type, Atom.to_string(key), [checked: @options.separator_type == key, class: "hidden"]) %>
+                    <div class="w-full py-3 px-4 text-center transition-all transform-gpu hover:scale-110 cursor-pointer">
+                      <div class="flex flex-col items-center justify-center">
+                        <div class="h-4 flex content-end"><img src="/images/<%= key %>.svg" /></div>
+                        <span class="font-sans text-xs uppercase text-white"><%= Atom.to_string(key) |> String.capitalize() %></span>
+                      </div>
+                    </div>
+                </label>
+              <% end %>
+            </div>
           </div>
-        </section>
 
-        <section>
           <div class="flex <%= if @type == "pin" or @type == "", do: "hidden" %>">
-            <%= checkbox :options, :numbers, value: @options.numbers %>
-            <%= label(:options, :numbers, "Include Numbers") %>
+            <label class="checkbox-style" for="options_numbers">
+              <%= checkbox :options, :numbers, value: @options.numbers %>
+              <div><span>Include Numbers</span></div>
+            </label>
           </div>
 
           <div class="flex <%= if @type == "pin" or @type == "", do: "hidden" %>">
-            <%= checkbox :options, :symbols, value: @options.symbols %>
-            <%= label(:options, :symbols, "Include Symbols") %>
+            <label class="checkbox-style" for="options_symbols">
+              <%= checkbox :options, :symbols, value: @options.symbols %>
+              <div><span>Include Symbols</span></div>
+            </label>
           </div>
 
           <div class="flex <%= if @type != "memorable", do: "hidden" %>">
-            <%= checkbox :options, :uppercase, value: @options.uppercase %>
-            <%= label(:options, :uppercase, "Include Uppercase") %>
+            <label class="checkbox-style" for="options_uppercase">
+              <%= checkbox :options, :uppercase, value: @options.uppercase %>
+              <div><span>Include Uppercase</span></div>
+            </label>
           </div>
         </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-container bg-purple-dark p-8 text-white">
+    <div class="grid-item-analysis-header">
+      <h2 class="font-serif text-5xl">Analysis</h2>
+    </div>
+    <div class="grid-item-analysis-results">
+      <%= Enum.map @analysis.results, fn {key, tuple} -> %>
+        <div class="flex justify-between items-center space-x-3 space-y-1 text-sm">
+          <div class="flex-grow font-mono"><%= Atom.to_string(key) |> String.replace("_", " ") |> String.capitalize %></div>
+          <div class="<%= if elem(tuple, 0) == :addition, do: "bg-purple-light", else: "bg-pink-dark" %> p-1 font-mono w-14 text-center mr-4"><%= elem(tuple, 1) %></div>
+        </div>
+      <% end %>
+    </div>
+    <div class="grid-item-analysis-strength">
+      <div class="bg-white w-full h-8 m-1">
+        <div class="relative h-full w-full">
+          <div class="absolute inset-x-0 top-0 h-full text-white transition-all bg-lime flex items-center " style="width: <%= @analysis.strength %>%"></div>
+        </div>
       </div>
     </div>
   </div>

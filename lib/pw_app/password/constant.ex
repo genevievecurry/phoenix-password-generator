@@ -10,7 +10,7 @@ defmodule Password.Constant do
   }
 
   @separator_types %{
-    none: "",
+    nothing: "",
     hyphens: "-",
     underscores: "_",
     periods: ".",
