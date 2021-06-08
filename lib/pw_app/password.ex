@@ -31,6 +31,7 @@ defmodule Password do
         "memorable" -> Generator.memorable(password.options)
         "random" -> Generator.random(password.options)
         "pin" -> Generator.pin(password.options)
+        _ -> %{}
       end
 
     %Password{

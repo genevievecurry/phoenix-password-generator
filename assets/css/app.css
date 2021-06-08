@@ -9,7 +9,7 @@
 .grid-container {
   display: grid;
   grid-template-columns: 225px 50px 50px 50px auto;
-  grid-template-rows: 100px 50px 50px 50px 50px auto auto 50px;
+  grid-template-rows: 100px 50px 50px 50px 50px 50px auto auto 50px;
   gap: 0px 0px;
 }
 .grid-item-first {
@@ -44,9 +44,16 @@
 }
 .grid-item-next-options {
   grid-row-start: 4;
-  grid-row-end: 7;
+  grid-row-end: 8;
   grid-column-start: 3;
   grid-column-end: 6;
+}
+
+.grid-item-refresh {
+  grid-row-start: 7;
+  grid-row-end: 8;
+  grid-column-start: 1;
+  grid-column-end: 2;
 }
 
 .grid-item-analysis-header {
@@ -58,46 +65,57 @@
 
 .grid-item-analysis-results {
   grid-row-start: 2;
-  grid-row-end: 7;
+  grid-row-end: 8;
   grid-column-start: 1;
   grid-column-end: 4;
 }
 
 .grid-item-analysis-strength {
   grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-end: 8;
   grid-column-start: 5;
   grid-column-end: 6;
 }
 
-.has-type .slide-in {
+.pw-has-type .pw-slide-in {
   opacity: 1;
   transform: translateX(0);
   transition: all 0.5s ease-in;
 }
 
-.no-type .slide-in {
+.pw-no-type .pw-slide-in {
   opacity: 0;
   transform: translateX(10%);
+}
+
+.pw-has-type .pw-slide-in-left {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.5s ease-in;
+}
+
+.pw-no-type .pw-slide-in-left {
+  opacity: 0;
+  transform: translateX(-10%);
 }
 
 label {
   @apply font-serif text-lg;
 }
 
-.radio-style {
+.pw-radio-style {
   @apply mb-4 flex cursor-pointer;
 }
 
-.radio-style input {
+.pw-radio-style input {
   @apply hidden;
 }
 
-.radio-style input + div span {
+.pw-radio-style input + div span {
   @apply flex items-center relative;
 }
 
-.radio-style input + div span:before {
+.pw-radio-style input + div span:before {
   @apply bg-pink-dark mr-3;
   content: "";
   display: inline-block;
@@ -106,11 +124,11 @@ label {
   border-radius: 50%;
 }
 
-.radio-style input:checked + div span:before {
+.pw-radio-style input:checked + div span:before {
   @apply bg-purple;
 }
 
-.radio-style input:checked + div span:after {
+.pw-radio-style input:checked + div span:after {
   @apply bg-white;
   content: "";
   height: 10px;
@@ -120,22 +138,22 @@ label {
   left: 8px;
 }
 
-.checkbox-style {
+.pw-checkbox-style {
   @apply mb-4;
   display: flex;
   cursor: pointer;
 }
 
-.checkbox-style input {
+.pw-checkbox-style input {
   @apply hidden;
 }
 
-.checkbox-style input + div span {
+.pw-checkbox-style input + div span {
   @apply flex items-center;
   position: relative;
 }
 
-.checkbox-style input + div span:before {
+.pw-checkbox-style input + div span:before {
   @apply bg-pink-dark mr-3;
   content: "";
   display: inline-block;
@@ -143,7 +161,7 @@ label {
   height: 25px;
 }
 
-.checkbox-style input:checked + div span:before {
+.pw-checkbox-style input:checked + div span:before {
   @apply bg-purple;
   background-image: url("/images/checkmark.svg");
 }
@@ -164,10 +182,10 @@ input[type="range"]::-moz-range-thumb {
   border: none;
 }
 
-.separator-type input + div {
+.pw-separator-type input + div {
   @apply bg-pink-dark;
 }
 
-.separator-type input:checked + div {
+.pw-separator-type input:checked + div {
   @apply bg-purple;
 }

@@ -1,14 +1,14 @@
 <form phx-change="generate">
-  <div class="grid-container lg:overflow-x-hidden <%= if @type == "", do: "no-type overflow-x-hidden", else: "has-type" %>">
+  <div class="grid-container lg:overflow-x-hidden <%= if @type == "", do: "pw-no-type overflow-x-hidden", else: "pw-has-type" %>">
     <div class="grid-item-first bg-white flex items-center">
       <div class="px-8">
         <h2 class="font-serif text-5xl text-purple-dark">First</h2>
         <p class="font-light text-purple-dark text-sm">What type of password do you need?</p>
       </div>
     </div>
-    <div class="grid-item-strength bg-white slide-in">
+    <div class="grid-item-strength bg-white pw-slide-in">
       <div class="relative h-full w-full">
-        <div class="absolute inset-x-0 top-0 h-full text-white transition-all bg-lime flex items-center py-2 px-8" style="width: <%= @analysis.strength %>%"></div>
+        <div class="absolute inset-x-0 top-0 h-full transition-all bg-lime flex items-center py-2 px-8" style="width: <%= @analysis.strength %>%"></div>
         <div class="absolute inset-x-0 top-0 text-left h-full text-white flex items-center py-2 px-8">
           <span class="block break-words max-w-full <%= @output_class %> text-purple-dark font-mono <%= if @output == "", do: "hidden" %>">
             <%= @output %>
@@ -16,29 +16,39 @@
         </div>
       </div>
     </div>
-    <div class="grid-item-strength-label flex items-center px-8 slide-in">
+    <div class="grid-item-strength-label flex items-center px-8 pw-slide-in">
       <span class="whitespace-nowrap font-serif text-white text-right w-full block">
         This password is <%= @analysis.strength %>% <strong class="">awesome</strong>.
       </span>
     </div>
     <div class="grid-item-first-options bg-pink">
       <div class="p-8">
-        <label class="radio-style" for="memorable">
+        <label class="pw-radio-style" for="memorable">
           <input name="type" value="memorable" type="radio" id="memorable" class="hidden" <%= if @type == "memorable", do: "checked" %>>
           <div><span>Memorable</span></div>
         </label>
-        <label class="radio-style" for="random">
+        <label class="pw-radio-style" for="random">
           <input name="type" value="random" type="radio" id="random" class="hidden" <%= if @type == "random", do: "checked" %>>
           <div><span>Random</span></div>
         </label>
-        <label class="radio-style" for="pin">
+        <label class="pw-radio-style" for="pin">
           <input name="type" value="pin" type="radio" id="pin" class="hidden" <%= if @type == "pin", do: "checked" %>>
           <div><span>PIN</span></div>
         </label>
       </div>
     </div>
 
-    <div class="grid-item-next-options bg-pink relative slide-in">
+    <div class="grid-item-refresh relative pw-slide-in-left">
+      <div class="bg-white w-full p-8 flex flex-col items-center justify-center cursor-pointer transition-all text-purple-dark hover:text-purple" phx-click="refresh">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+
+        <span class="text-xs mt-3">Regenerate Password</span>
+      </div>
+    </div>
+
+    <div class="grid-item-next-options bg-pink relative pw-slide-in">
       <div class="bg-white absolute left-0 transform -translate-y-2/4 z-10 flex items-center h-100">
         <div class="px-8">
           <h2 class="font-serif text-5xl text-purple-dark">Next</h2>
@@ -73,7 +83,7 @@
             <span class="font-serif block text-lg">What goes between the words?</span>
             <div class="flex space-x-4 items-stretch mt-2">
               <%= Enum.map @separator_types, fn {key, _value} -> %>
-                <label class="separator-type flex flex-1 items-center justify-center">
+                <label class="pw-separator-type flex flex-1 items-center justify-center">
                     <%= radio_button(:options, :separator_type, Atom.to_string(key), [checked: @options.separator_type == key, class: "hidden"]) %>
                     <div class="w-full py-3 px-4 text-center transition-all transform-gpu hover:scale-110 cursor-pointer">
                       <div class="flex flex-col items-center justify-center">
@@ -87,23 +97,23 @@
           </div>
 
           <div class="flex <%= if @type == "pin" or @type == "", do: "hidden" %>">
-            <label class="checkbox-style" for="options_numbers">
+            <label class="pw-checkbox-style" for="options_numbers">
               <%= checkbox :options, :numbers, value: @options.numbers %>
-              <div><span>Include Numbers</span></div>
+              <div><span><%= if @type == "memorable", do: "Append Number", else: "Include Numbers" %></span></div>
             </label>
           </div>
 
           <div class="flex <%= if @type == "pin" or @type == "", do: "hidden" %>">
-            <label class="checkbox-style" for="options_symbols">
+            <label class="pw-checkbox-style" for="options_symbols">
               <%= checkbox :options, :symbols, value: @options.symbols %>
-              <div><span>Include Symbols</span></div>
+              <div><span><%= if @type == "memorable", do: "Append Symbol", else: "Include Symbols" %></span></div>
             </label>
           </div>
 
           <div class="flex <%= if @type != "memorable", do: "hidden" %>">
-            <label class="checkbox-style" for="options_uppercase">
+            <label class="pw-checkbox-style" for="options_uppercase">
               <%= checkbox :options, :uppercase, value: @options.uppercase %>
-              <div><span>Include Uppercase</span></div>
+              <div><span>Include Uppercase Word(s)</span></div>
             </label>
           </div>
         </section>
@@ -111,24 +121,62 @@
     </div>
   </div>
 
-  <div class="grid-container bg-purple-dark p-8 text-white">
+  <div class="bg-purple-dark p-8 text-white <%= if @type == "", do: "hidden", else: "grid-container" %>">
     <div class="grid-item-analysis-header">
       <h2 class="font-serif text-5xl">Analysis</h2>
     </div>
     <div class="grid-item-analysis-results">
+      <h3 class="font-serif text-3xl mb-4">Factors</h3>
       <%= Enum.map @analysis.results, fn {key, tuple} -> %>
         <div class="flex justify-between items-center space-x-3 space-y-1 text-sm">
           <div class="flex-grow font-mono"><%= Atom.to_string(key) |> String.replace("_", " ") |> String.capitalize %></div>
-          <div class="<%= if elem(tuple, 0) == :addition, do: "bg-purple-light", else: "bg-pink-dark" %> p-1 font-mono w-14 text-center mr-4"><%= elem(tuple, 1) %></div>
+          <div class="<%= if elem(tuple, 0) == :addition, do: "bg-purple-light", else: "bg-pink-dark" %> p-1 font-mono w-14 text-center mr-4">
+            <%= if elem(tuple, 0) == :addition, do: "+" %><%= elem(tuple, 1) %>
+          </div>
         </div>
       <% end %>
-    </div>
-    <div class="grid-item-analysis-strength">
-      <div class="bg-white w-full h-8 m-1">
-        <div class="relative h-full w-full">
-          <div class="absolute inset-x-0 top-0 h-full text-white transition-all bg-lime flex items-center " style="width: <%= @analysis.strength %>%"></div>
-        </div>
+      <div class="flex justify-between items-center space-x-3 space-y-1 text-sm">
+        <div class="flex-grow font-serif text-xl text-right">Score</div>
+        <div class="bg-lime p-1 font-mono w-14 text-center mr-4 text-purple-dark"><%= @analysis.score %></div>
       </div>
     </div>
+    <div class="grid-item-analysis-strength">
+      <h3 class="font-serif text-3xl mb-4">Strength</h3>
+      <div class="bg-white w-full h-8 m-1">
+        <div class="relative h-full w-full">
+          <div class="absolute inset-x-0 top-0 h-full transition-all bg-lime flex items-center px-2" style="width: <%= @analysis.strength %>%">
+            <span class="text-purple-dark font-mono"><%= @analysis.strength %>%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="<%= if @analysis.strength == 100, do: "hidden" %>">
+        <h3 class="font-serif text-3xl mt-10 mb-4">Make it stronger:</h3>
+        <ul class="list-disc ml-6 font-thin">
+          <%= Enum.map @advice, fn item -> %>
+            <li class="mb-2"><%= item %></li>
+          <% end %>
+        </ul>
+      </div>
+
+      <h3 class="font-serif text-3xl mt-10 mb-4">Notes on Generator & Analysis</h3>
+      <ul class="list-disc ml-6 font-thin">
+        <li class="mb-2">The password generator uses the <a href="https://1password.com/password-generator/" target="_blank" rel="noreferrer" class="text-lime">1Password Strong Password Generator</a> as a baseline for generating passwords, with a few modifications. The "memorable" passwords that my tool generates uses is from a <a href="https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-medium.txt" target="_blank" rel="noreferrer" class="text-lime">list of about ~5000 English words</a> that are between 5-8 characters.</li>
+        <li class="mb-2">The analysis uses <a href="http://www.passwordmeter.com/" target="_blank" rel="noreferrer" class="text-lime">The Password Meter</a> as a baseline for the factors used to score passwords, with a few modifications. I think that something like <a href="https://github.com/dropbox/zxcvbn" target="_blank" rel="noreferrer" class="text-lime">zxcvbn</a> is a better tool to test password strength against brute force attacks. <a href="https://dropbox.tech/security/zxcvbn-realistic-password-strength-estimation" target="_blank" rel="noreferrer" class="text-lime">Dan Wheeler's essay on how to test for a strong password</a> make a lot of sense. He notes that the following are also important factors in password security (outside the control of the user, so I think my somewhat flawed analysis is sufficient for most cases):
+          <ul class="list-disc ml-6">
+            <li>Preventing online cracking with throttling or CAPTCHAs.</li>
+            <li>Preventing offline cracking by selecting a suitably slow hash function with user-unique salts.</li>
+            <li>Securing said password hashes.</li>
+          </ul>
+        </li>
+        <li class="mb-2">A strength rating of 100% is given to passwords that score 150 or higher based on the semi-arbitrary factors listed.</li>
+        <li class="mb-2">You can find the repository for this project at <a href="https://github.com/genevievecurry/phoenix-password-generator" target="_blank" rel="noreferrer" class="text-lime">github.com/genevievecurry/phoenix-password-generator</a>.</li>
+        <li>If you find some of the tips about making an auto-generated password stronger a little bit annoying, well... you're not wrong. They are annoying :)</li>
+      </ul>
+    </div>
   </div>
+
+  <footer class="flex items-center justify-center h-32">
+    <p class="text-white font-thin">A learning project by <a href="https://github.com/genevievecurry" target="_blank" rel="noreferrer" class="text-lime">Genevieve Curry</a>, using <a href="https://www.phoenixframework.org/" target="_blank" rel="noreferrer" class="text-lime">Phoenix</a> LiveView.</p>
+  </footer>
 </form>

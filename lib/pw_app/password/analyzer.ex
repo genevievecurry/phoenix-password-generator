@@ -6,13 +6,12 @@ defmodule Password.Analyzer do
   @alpha 'abcdefghijklmnopqrstuvwxyz'
   @symbols '`!@#$%^&*()-='
   @factors [
+    :minimum_requirements,
     :length,
     :uppercase,
     :lowercase,
     :numbers,
     :symbols,
-    :middle,
-    :minimum_requirements,
     :letters_only,
     :repeat_characters,
     :consecutive_lowercase,
@@ -20,7 +19,8 @@ defmodule Password.Analyzer do
     :consecutive_numbers,
     :sequential_numbers,
     :sequential_alpha,
-    :sequential_symbols
+    :sequential_symbols,
+    :contains_year
   ]
   @spec check(atom, String.t()) :: tuple()
   def(check(type, password))
@@ -42,7 +42,11 @@ defmodule Password.Analyzer do
   def check(:lowercase, password) do
     length = String.length(password)
     count = Regex.scan(~r/[[:lower:]]/u, password) |> Enum.count()
-    {:addition, (length - count) * 2}
+
+    cond do
+      count > 0 -> {:addition, (length - count) * 2}
+      true -> {:addition, 0}
+    end
   end
 
   def check(:numbers, password) do
@@ -53,11 +57,6 @@ defmodule Password.Analyzer do
   def check(:symbols, password) do
     count = Regex.scan(~r/[*!#$%+-.?@&^()=~`_]/u, password) |> Enum.count()
     {:addition, count * 6}
-  end
-
-  def check(:middle, _password) do
-    # TO-DO
-    {:addition, 0}
   end
 
   def check(:minimum_requirements, password) do
@@ -137,13 +136,13 @@ defmodule Password.Analyzer do
 
   def check(:sequential_numbers, password) do
     sequential_score =
-      Enum.chunk_every(0..10, 3, 1, :discard)
+      Enum.chunk_every(0..10, 4, 1, :discard)
       |> Enum.map(fn set -> Enum.join(set) end)
       |> Enum.map(fn set -> String.contains?(password, set) end)
       |> Enum.count(fn matched -> matched end)
 
     reverse_sequential_score =
-      Enum.chunk_every(10..0, 3, 1, :discard)
+      Enum.chunk_every(10..0, 4, 1, :discard)
       |> Enum.map(fn set -> Enum.join(set) end)
       |> Enum.map(fn set -> String.contains?(password, set) end)
       |> Enum.count(fn matched -> matched end)
@@ -184,6 +183,14 @@ defmodule Password.Analyzer do
       |> Enum.count(fn matched -> matched end)
 
     {:deduction, (sequential_score + reverse_sequential_score) * 3 * -1}
+  end
+
+  def check(:contains_year, password) do
+    if Regex.match?(~r/(19|20)\d{2}/u, password) do
+      {:deduction, -10}
+    else
+      {:deduction, 0}
+    end
   end
 
   @spec results(String.t()) :: list

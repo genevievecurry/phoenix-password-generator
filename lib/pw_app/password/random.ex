@@ -5,8 +5,9 @@ defmodule Password.Random do
   # ["@", "%", "+", "!", "#", "$", "?", "-", "_", "."]
   @legal_symbols Constant.legal_symbols()
   @legal_digits Constant.legal_digits()
-  # https://github.com/dwyl/english-words
-  @word_list File.read!("priv/static/words_alpha.txt") |> String.split(~r/\n/)
+  # https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english-usa-no-swears-medium.txt
+  @word_list File.read!("priv/static/words_common_memorable.txt")
+             |> String.split(~r/\n/)
 
   @spec start_link() :: {:error, any} | {:ok, pid}
   def start_link() do
