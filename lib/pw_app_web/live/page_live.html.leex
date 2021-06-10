@@ -1,22 +1,21 @@
-<form phx-change="generate">
-  <div class="grid-container lg:overflow-x-hidden <%= if @type == "", do: "pw-no-type overflow-x-hidden", else: "pw-has-type" %>">
+<%= _f = form_for :atom, "", [phx_change: :generate, phx_submit: :analyze] %>
+  <div class="grid-container lg:overflow-x-hidden <%= if @type == "", do: "animate-off overflow-x-hidden", else: "animate-on" %>">
     <div class="grid-item-first bg-white flex items-center">
       <div class="px-8">
         <h2 class="font-serif text-5xl text-purple-dark">First</h2>
         <p class="font-light text-purple-dark text-sm">What type of password do you need?</p>
       </div>
     </div>
-    <div class="grid-item-strength bg-white pw-slide-in">
+    <div class="grid-item-strength bg-white animate <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
       <div class="relative h-full w-full">
-        <div class="absolute inset-x-0 top-0 h-full transition-all bg-lime flex items-center py-2 px-8" style="width: <%= @analysis.strength %>%"></div>
+        <div class="absolute inset-x-0 top-0 h-full transition-all flex items-center py-2 px-8 <%= @strength_meter_color %>" style="width: <%= @analysis.strength %>%"></div>
         <div class="absolute inset-x-0 top-0 text-left h-full text-white flex items-center py-2 px-8">
-          <span class="block break-words max-w-full <%= @output_class %> text-purple-dark font-mono <%= if @output == "", do: "hidden" %>">
-            <%= @output %>
-          </span>
+          <span class="block break-words max-w-full <%= @output_font_size %> text-purple-dark font-mono"><%= @output %></span>
+
         </div>
       </div>
     </div>
-    <div class="grid-item-strength-label flex items-center px-8 pw-slide-in">
+    <div class="grid-item-strength-label flex items-center px-8 animate <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
       <span class="whitespace-nowrap font-serif text-white text-right w-full block">
         This password is <%= @analysis.strength %>% <strong class="">awesome</strong>.
       </span>
@@ -35,10 +34,14 @@
           <input name="type" value="pin" type="radio" id="pin" class="hidden" <%= if @type == "pin", do: "checked" %>>
           <div><span>PIN</span></div>
         </label>
+        <label class="pw-radio-style" for="custom">
+          <input name="type" value="custom" type="radio" id="custom" class="hidden" <%= if @type == "custom", do: "checked" %>>
+          <div><span>Custom (BYOP)</span></div>
+        </label>
       </div>
     </div>
 
-    <div class="grid-item-refresh relative pw-slide-in-left">
+    <div class="grid-item-refresh relative animate <%= if @show_section.refresh, do: "fadeInLeft", else: "fadeOutLeft " %>">
       <div class="bg-white w-full p-8 flex flex-col items-center justify-center cursor-pointer transition-all text-purple-dark hover:text-purple" phx-click="refresh">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -48,14 +51,22 @@
       </div>
     </div>
 
-    <div class="grid-item-next-options bg-pink relative pw-slide-in">
+    <div class="grid-item-next-options bg-pink relative animate <%= if @show_section.next, do: "fadeInRight", else: "fadeOutRight" %>">
       <div class="bg-white absolute left-0 transform -translate-y-2/4 z-10 flex items-center h-100">
         <div class="px-8">
           <h2 class="font-serif text-5xl text-purple-dark">Next</h2>
-          <p class="font-light text-purple-dark text-sm">Adjust it to your requirements.</p>
+          <p class="font-light text-purple-dark text-sm"><%= if @type != "custom", do: "Adjust it to your requirements.", else: "Bring Your Own Password" %></p>
         </div>
       </div>
       <div class="p-8 mt-14">
+        <section class="<%= if @type != "custom", do: "hidden" %>">
+          <label for="output">Enter your password: </label>
+          <div class="flex mt-2">
+            <input type="text" name="output" id="output" value="<%= @output %>" class="block p-4 w-full">
+            <div class="bg-purple text-white font-serif ml-2 p-4 cursor-pointer inline-block whitespace-nowrap <%= if String.length(@output) > 0, do: "visible", else: "invisible" %>" phx-click="analyze">Analyze Password</div>
+          </div>
+        </section>
+
         <section>
           <div class="mb-6 w-full <%= if @type != "memorable", do: "hidden" %>">
             <%= label(:options, :word_count, "How many words?") %>
@@ -96,14 +107,16 @@
             </div>
           </div>
 
-          <div class="flex <%= if @type == "pin" or @type == "", do: "hidden" %>">
+
+
+          <div class="flex <%= if Enum.member?(["custom", "pin", ""], @type), do: "hidden" %>">
             <label class="pw-checkbox-style" for="options_numbers">
               <%= checkbox :options, :numbers, value: @options.numbers %>
               <div><span><%= if @type == "memorable", do: "Append Number", else: "Include Numbers" %></span></div>
             </label>
           </div>
 
-          <div class="flex <%= if @type == "pin" or @type == "", do: "hidden" %>">
+          <div class="flex <%= if Enum.member?(["custom", "pin", ""], @type), do: "hidden" %>">
             <label class="pw-checkbox-style" for="options_symbols">
               <%= checkbox :options, :symbols, value: @options.symbols %>
               <div><span><%= if @type == "memorable", do: "Append Symbol", else: "Include Symbols" %></span></div>
@@ -121,58 +134,102 @@
     </div>
   </div>
 
-  <div class="bg-purple-dark p-8 text-white <%= if @type == "", do: "hidden", else: "grid-container" %>">
-    <div class="grid-item-analysis-header">
-      <h2 class="font-serif text-5xl">Analysis</h2>
-    </div>
-    <div class="grid-item-analysis-results">
-      <h3 class="font-serif text-3xl mb-4">Factors</h3>
-      <%= Enum.map @analysis.results, fn {key, tuple} -> %>
-        <div class="flex justify-between items-center space-x-3 space-y-1 text-sm">
-          <div class="flex-grow font-mono"><%= Atom.to_string(key) |> String.replace("_", " ") |> String.capitalize %></div>
-          <div class="<%= if elem(tuple, 0) == :addition, do: "bg-purple-light", else: "bg-pink-dark" %> p-1 font-mono w-14 text-center mr-4">
-            <%= if elem(tuple, 0) == :addition, do: "+" %><%= elem(tuple, 1) %>
+  <div class="<%= if @type == "" or @show_section.analysis == false, do: "animate-off overflow-y-hidden hidden", else: "animate-on" %>">
+    <div class="bg-purple-dark p-8 text-white animate <%= if @show_section.analysis, do: "fadeInUp", else: "fadeOutDown" %>">
+      <div class="grid-item-analysis-header">
+        <h2 class="font-serif text-5xl mb-10">Analysis</h2>
+      </div>
+      <div class="flex space-x-20">
+        <div class="flex-1">
+          <div class="<%= if @analysis.analyzed, do: "hidden", else: "visible" %>">
+            <p class="font-serif text-white text-lg">Enter a password above to receive an analysis.</p>
+          </div>
+          <div class="<%= if @analysis.analyzed, do: "visible", else: "hidden" %>">
+            <h3 class="font-serif text-3xl mb-4">Common Attributes</h3>
+            <h4 class="font-serif text-2xl mb-4 mt-4">Strength</h4>
+            <div class="bg-white w-full h-8 m-1">
+              <div class="relative h-full w-full">
+                <div class="absolute inset-x-0 top-0 h-full transition-all <%= @strength_meter_color %> flex items-center px-2" style="width: <%= @analysis.strength %>%">
+                  <span class="text-purple-dark font-mono"><%= @analysis.strength %>%</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="font-serif text-2xl mb-4 mt-10">Scoring Factors</h4>
+            <%= Enum.map @analysis.results, fn {key, tuple} -> %>
+              <div class="flex justify-between items-center space-x-3 space-y-1 text-sm">
+                <div class="flex-grow font-mono"><%= Atom.to_string(key) |> String.replace("_", " ") |> String.capitalize %></div>
+                <div class="<%= if elem(tuple, 0) == :addition, do: "bg-purple-light", else: "bg-pink-dark" %> p-1 font-mono w-14 text-center mr-4">
+                  <%= if elem(tuple, 0) == :addition, do: "+" %><%= elem(tuple, 1) %>
+                </div>
+              </div>
+            <% end %>
+            <div class="flex justify-between items-center space-x-3 space-y-1 text-sm">
+              <div class="flex-grow font-serif text-xl text-right">Score</div>
+              <div class="<%= @strength_meter_color %> p-1 font-mono w-14 text-center mr-4 text-purple-dark"><%= @analysis.score %></div>
+            </div>
           </div>
         </div>
-      <% end %>
-      <div class="flex justify-between items-center space-x-3 space-y-1 text-sm">
-        <div class="flex-grow font-serif text-xl text-right">Score</div>
-        <div class="bg-lime p-1 font-mono w-14 text-center mr-4 text-purple-dark"><%= @analysis.score %></div>
-      </div>
-    </div>
-    <div class="grid-item-analysis-strength">
-      <h3 class="font-serif text-3xl mb-4">Strength</h3>
-      <div class="bg-white w-full h-8 m-1">
-        <div class="relative h-full w-full">
-          <div class="absolute inset-x-0 top-0 h-full transition-all bg-lime flex items-center px-2" style="width: <%= @analysis.strength %>%">
-            <span class="text-purple-dark font-mono"><%= @analysis.strength %>%</span>
+        <div class="flex-1">
+          <div class="<%= if @analysis.analyzed, do: "visible", else: "hidden" %>">
+            <h3 class="font-serif text-3xl mb-4">Crackability Attributes</h3>
+            <h4 class="font-serif text-2xl mb-4 mt-4">Score</h4>
+
+            <div class="grid grid-cols-4 gap-x-1 h-8 m-1 bg-white relative">
+              <div class="absolute left-0 top-0 w-full h-full text-purple-dark font-mono flex items-center px-2">
+              <span><%= @analysis.zxcvbn.score %>/4</span>
+              </div>
+              <%= if @analysis.zxcvbn.score >= 1 do %><div class="<%= @crackable_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 2 do %><div class="<%= @crackable_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 3 do %><div class="<%= @crackable_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 4 do %><div class="<%= @crackable_meter_color %> col-span-1"></div><% end %>
+            </div>
+
+            <h4 class="font-serif text-2xl mb-4 mt-10">Estimated Time to Crack</h4>
+            <%= Enum.map @crackable_time, fn attack -> %>
+              <div class="flex flex-col mb-2 text-purple-dark p-3 <%= attack.color %>">
+                <div class="flex justify-between font-serif">
+                  <div><%= attack.rate %></div>
+                  <div><%= attack.label %></div>
+                </div>
+                <div class="mt-3 pt-3 text-lg border-t border-purple-dark">
+                  It might take <strong class=""><%= attack.time %></strong> to crack.
+                </div>
+              </div>
+            <% end %>
           </div>
         </div>
-      </div>
+        <div class="flex-1">
+          <div class="<%= if @analysis.strength < 100 and @analysis.analyzed, do: "visible mb-10", else: "hidden" %>">
+            <h3 class="font-serif text-3xl mb-4">Feedback</h3>
 
-      <div class="<%= if @analysis.strength == 100, do: "hidden" %>">
-        <h3 class="font-serif text-3xl mt-10 mb-4">Make it stronger:</h3>
-        <ul class="list-disc ml-6 font-thin">
-          <%= Enum.map @advice, fn item -> %>
-            <li class="mb-2"><%= item %></li>
-          <% end %>
-        </ul>
-      </div>
+            <ul class="list-disc ml-6 font-thin">
 
-      <h3 class="font-serif text-3xl mt-10 mb-4">Notes on Generator & Analysis</h3>
-      <ul class="list-disc ml-6 font-thin">
-        <li class="mb-2">The password generator uses the <a href="https://1password.com/password-generator/" target="_blank" rel="noreferrer" class="text-lime">1Password Strong Password Generator</a> as a baseline for generating passwords, with a few modifications. The "memorable" passwords that my tool generates uses is from a <a href="https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-medium.txt" target="_blank" rel="noreferrer" class="text-lime">list of about ~5000 English words</a> that are between 5-8 characters.</li>
-        <li class="mb-2">The analysis uses <a href="http://www.passwordmeter.com/" target="_blank" rel="noreferrer" class="text-lime">The Password Meter</a> as a baseline for the factors used to score passwords, with a few modifications. I think that something like <a href="https://github.com/dropbox/zxcvbn" target="_blank" rel="noreferrer" class="text-lime">zxcvbn</a> is a better tool to test password strength against brute force attacks. <a href="https://dropbox.tech/security/zxcvbn-realistic-password-strength-estimation" target="_blank" rel="noreferrer" class="text-lime">Dan Wheeler's essay on how to test for a strong password</a> make a lot of sense. He notes that the following are also important factors in password security (outside the control of the user, so I think my somewhat flawed analysis is sufficient for most cases):
-          <ul class="list-disc ml-6">
-            <li>Preventing online cracking with throttling or CAPTCHAs.</li>
-            <li>Preventing offline cracking by selecting a suitably slow hash function with user-unique salts.</li>
-            <li>Securing said password hashes.</li>
+              <%= if String.length(@analysis.zxcvbn.feedback.warning) > 0 do %>
+                <li class="mb-2 text-pink-dark font-bold">Warning: <%= @analysis.zxcvbn.feedback.warning %></li>
+              <% end %>
+
+              <%= Enum.map @advice, fn item -> %>
+                <li class="mb-2"><%= item %></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <h3 class="font-serif text-3xl mb-4">Notes on Generator & Analysis</h3>
+          <ul class="list-disc ml-6 font-thin">
+            <li class="mb-2">The password generator uses the <a href="https://1password.com/password-generator/" target="_blank" rel="noreferrer" class="text-lime">1Password Strong Password Generator</a> as a baseline for generating passwords, with a few modifications. The "memorable" passwords that my tool generates uses is from a <a href="https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-medium.txt" target="_blank" rel="noreferrer" class="text-lime">list of about ~5000 English words</a> that are between 5-8 characters.</li>
+            <li class="mb-2">The analysis uses <a href="http://www.passwordmeter.com/" target="_blank" rel="noreferrer" class="text-lime">The Password Meter</a> as a baseline for the "common attributes" factors used to score passwords, with a few modifications.</li>
+            <li class="mb-2">For "crackability attributes", <a href="https://github.com/dropbox/zxcvbn" target="_blank" rel="noreferrer" class="text-lime">zxcvbn</a> is used to test password strength against brute force attacks. I used an <a href="https://github.com/techgaun/zxcvbn-elixir" target="_blank" rel="noreferrer" class="text-lime">elixir port</a> of this library for this project. <a href="https://dropbox.tech/security/zxcvbn-realistic-password-strength-estimation" target="_blank" rel="noreferrer" class="text-lime">Dan Wheeler's essay on how to test for a strong password</a> is an interesting read. He notes that the following are also important factors in password security:
+              <ul class="list-disc ml-6">
+                <li>Preventing online cracking with throttling or CAPTCHAs.</li>
+                <li>Preventing offline cracking by selecting a suitably slow hash function with user-unique salts.</li>
+                <li>Securing said password hashes.</li>
+              </ul>
+            </li>
+            <li class="mb-2">A strength rating of 100% is given to passwords that score 150 or higher based on the semi-arbitrary factors listed.</li>
+            <li class="mb-2">You can find the repository for this project at <a href="https://github.com/genevievecurry/phoenix-password-generator" target="_blank" rel="noreferrer" class="text-lime">github.com/genevievecurry/phoenix-password-generator</a>.</li>
           </ul>
-        </li>
-        <li class="mb-2">A strength rating of 100% is given to passwords that score 150 or higher based on the semi-arbitrary factors listed.</li>
-        <li class="mb-2">You can find the repository for this project at <a href="https://github.com/genevievecurry/phoenix-password-generator" target="_blank" rel="noreferrer" class="text-lime">github.com/genevievecurry/phoenix-password-generator</a>.</li>
-        <li>If you find some of the tips about making an auto-generated password stronger a little bit annoying, well... you're not wrong. They are annoying :)</li>
-      </ul>
+        </div>
+      </div>
     </div>
   </div>
 

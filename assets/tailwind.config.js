@@ -51,6 +51,12 @@ module.exports = {
       pink: {
         DEFAULT: '#FFE1DA',
         dark: '#E3ADA1'
+      },
+      meter: {
+        '25': '#ff9595',
+        '50': '#ffc295',
+        '75': '#ffe995',
+        '100': '#DBD420',
       }
     },
     extend: {

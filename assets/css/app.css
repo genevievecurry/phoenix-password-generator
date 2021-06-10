@@ -9,7 +9,7 @@
 .grid-container {
   display: grid;
   grid-template-columns: 225px 50px 50px 50px auto;
-  grid-template-rows: 100px 50px 50px 50px 50px 50px auto auto 50px;
+  grid-template-rows: 100px 50px 50px 50px auto 50px auto auto 50px;
   gap: 0px 0px;
 }
 .grid-item-first {
@@ -56,36 +56,115 @@
   grid-column-end: 2;
 }
 
-.grid-item-analysis-header {
-  grid-row-start: 1;
-  grid-row-end: 2;
-  grid-column-start: 1;
-  grid-column-end: 6;
+:root {
+  --animate-duration: 1s;
+  --animate-delay: 1s;
+  --animate-repeat: 1;
+}
+.animate-on .animate {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-duration: var(--animate-duration);
+  animation-duration: var(--animate-duration);
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
 }
 
-.grid-item-analysis-results {
-  grid-row-start: 2;
-  grid-row-end: 8;
-  grid-column-start: 1;
-  grid-column-end: 4;
-}
-
-.grid-item-analysis-strength {
-  grid-row-start: 2;
-  grid-row-end: 8;
-  grid-column-start: 5;
-  grid-column-end: 6;
-}
-
-.pw-has-type .pw-slide-in {
-  opacity: 1;
-  transform: translateX(0);
-  transition: all 0.5s ease-in;
-}
-
-.pw-no-type .pw-slide-in {
+.animate-off .animate {
   opacity: 0;
-  transform: translateX(10%);
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeInRight {
+  animation-name: fadeInRight;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeInLeft {
+  animation-name: fadeInLeft;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeInUp {
+  animation-name: fadeInUp;
+}
+
+@keyframes fadeOutRight {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+.fadeOutRight {
+  animation-name: fadeOutRight;
+}
+
+@keyframes fadeOutLeft {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.fadeOutLeft {
+  animation-name: fadeOutLeft;
+}
+
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+.fadeOutDown {
+  animation-name: fadeOutDown;
 }
 
 .pw-has-type .pw-slide-in-left {
@@ -116,9 +195,8 @@ label {
 }
 
 .pw-radio-style input + div span:before {
-  @apply bg-pink-dark mr-3;
+  @apply bg-pink-dark mr-3 inline-block;
   content: "";
-  display: inline-block;
   width: 25px;
   height: 25px;
   border-radius: 50%;
@@ -129,12 +207,11 @@ label {
 }
 
 .pw-radio-style input:checked + div span:after {
-  @apply bg-white;
+  @apply bg-white absolute;
   content: "";
-  height: 10px;
-  width: 10px;
+  height: 9px;
+  width: 9px;
   border-radius: 50%;
-  position: absolute;
   left: 8px;
 }
 
@@ -149,8 +226,7 @@ label {
 }
 
 .pw-checkbox-style input + div span {
-  @apply flex items-center;
-  position: relative;
+  @apply flex items-center relative;
 }
 
 .pw-checkbox-style input + div span:before {
