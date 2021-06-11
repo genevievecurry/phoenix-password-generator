@@ -265,3 +265,7 @@ input[type="range"]::-moz-range-thumb {
 .pw-separator-type input:checked + div {
   @apply bg-purple;
 }
+
+.pw-regenerate:hover .transform {
+  @apply -rotate-45;
+}

@@ -41,15 +41,19 @@
       </div>
     </div>
 
-    <div class="grid-item-refresh relative animate <%= if @show_section.refresh, do: "fadeInLeft", else: "fadeOutLeft " %>">
-      <div class="bg-white w-full p-8 flex flex-col items-center justify-center cursor-pointer transition-all text-purple-dark hover:text-purple" phx-click="refresh">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-        </svg>
+    <%= if Enum.member?(["memorable", "pin", "random"], @type) do %>
+      <div class="grid-item-refresh relative animate <%= if @show_section.refresh, do: "fadeInLeft", else: "fadeOutLeft " %>">
+        <div class="pw-regenerate bg-white w-full p-8 flex flex-col items-center justify-center cursor-pointer transition-all text-purple-dark hover:text-purple" phx-click="refresh">
+          <div class="transition-all transform rotate-0 duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </div>
 
-        <span class="text-xs mt-3">Regenerate Password</span>
+          <span class="text-xs mt-3">Regenerate Password</span>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <div class="grid-item-next-options bg-pink relative animate <%= if @show_section.next, do: "fadeInRight", else: "fadeOutRight" %>">
       <div class="bg-white absolute left-0 transform -translate-y-2/4 z-10 flex items-center h-100">
@@ -60,10 +64,10 @@
       </div>
       <div class="p-8 mt-14">
         <section class="<%= if @type != "custom", do: "hidden" %>">
-          <label for="output">Enter your password: </label>
+          <label for="input">Enter your password: </label>
           <div class="flex mt-2">
-            <input type="text" name="output" id="output" value="<%= @output %>" class="block p-4 w-full">
-            <div class="bg-purple text-white font-serif ml-2 p-4 cursor-pointer inline-block whitespace-nowrap <%= if String.length(@output) > 0, do: "visible", else: "invisible" %>" phx-click="analyze">Analyze Password</div>
+            <input type="text" name="input" id="input" value="<%= @input %>" class="block p-4 w-full" phx-keyup="custom_entry">
+            <div class="text-white font-serif ml-2 p-4 inline-block whitespace-nowrap <%= if @input != "", do: "cursor-pointer bg-purple", else: "cursor-default bg-purple-light" %>" phx-click="analyze">Analyze Password</div>
           </div>
         </section>
 
@@ -72,21 +76,21 @@
             <%= label(:options, :word_count, "How many words?") %>
             <div class="flex mt-2 w-full items-center">
               <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.word_count %></span>
-              <%= range_input(:options, :word_count, [min: 3, max: 15, value: @options.word_count, class: "flex-grow"]) %>
+              <%= range_input(:options, :word_count, [min: 3, max: 15, value: @options.word_count, class: "flex-grow", phx_debounce: 250]) %>
             </div>
           </div>
           <div class="mb-6 w-full <%= if @type != "pin", do: "hidden" %>">
             <%= label(:options, :pin_length, "PIN Length") %>
             <div class="flex mt-2 w-full items-center">
               <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.pin_length %></span>
-              <%= range_input(:options, :pin_length, [min: 3, max: 16, value: @options.pin_length, class: "flex-grow"]) %>
+              <%= range_input(:options, :pin_length, [min: 3, max: 16, value: @options.pin_length, class: "flex-grow", phx_debounce: 250]) %>
             </div>
           </div>
           <div class="mb-6 w-full <%= if @type != "random", do: "hidden" %>">
             <%= label(:options, :character_count, "Character Count") %>
             <div class="flex mt-2 w-full items-center">
               <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.character_count %></span>
-              <%= range_input(:options, :character_count, [min: 8, max: 100, value: @options.character_count, class: "flex-grow"]) %>
+              <%= range_input(:options, :character_count, [min: 8, max: 99, value: @options.character_count, class: "flex-grow", phx_debounce: 250]) %>
             </div>
           </div>
 
@@ -136,8 +140,14 @@
 
   <div class="<%= if @type == "" or @show_section.analysis == false, do: "animate-off overflow-y-hidden hidden", else: "animate-on" %>">
     <div class="bg-purple-dark p-8 text-white animate <%= if @show_section.analysis, do: "fadeInUp", else: "fadeOutDown" %>">
-      <div class="grid-item-analysis-header">
-        <h2 class="font-serif text-5xl mb-10">Analysis</h2>
+      <div class="grid-item-analysis-header flex justify-between items-center mb-10">
+        <h2 class="font-serif text-5xl">Analysis</h2>
+        <%= if String.length(@output) > 0 do %>
+          <div class="ml-8">
+            Analyzing:
+            <span class="font-mono block mt-2 bg-purple p-2"><%= @output %></span>
+          </div>
+        <% end %>
       </div>
       <div class="flex space-x-20">
         <div class="flex-1">

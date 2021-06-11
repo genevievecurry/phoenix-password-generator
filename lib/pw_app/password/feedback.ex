@@ -71,11 +71,20 @@ defmodule Password.Feedback do
     Enum.map(crack_times_display, fn {key, value} ->
       color =
         cond do
-          String.contains?(value, ["seconds", "second", "minutes"]) -> "bg-meter-25"
-          String.contains?(value, ["hours"]) -> "bg-meter-50"
-          String.contains?(value, ["days", "months"]) -> "bg-meter-75"
-          String.contains?(value, ["years", "centuries"]) -> "bg-meter-100"
-          true -> "bg-purple-light"
+          String.contains?(value, ["seconds", "second", "minute", "minutes", "hour"]) ->
+            "bg-meter-25"
+
+          String.contains?(value, ["hours", "day"]) ->
+            "bg-meter-50"
+
+          String.contains?(value, ["days", "week", "month", "months"]) ->
+            "bg-meter-75"
+
+          String.contains?(value, ["year", "years", "century", "centuries"]) ->
+            "bg-meter-100"
+
+          true ->
+            "bg-purple-light"
         end
 
       label =

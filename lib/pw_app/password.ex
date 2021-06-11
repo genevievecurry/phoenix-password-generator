@@ -21,6 +21,7 @@ defmodule Password do
   defstruct type: "",
             options: %Options{},
             output: "",
+            input: "",
             analysis: %{
               analyzed: false,
               score: 0,
@@ -74,7 +75,7 @@ defmodule Password do
         "memorable" -> Generator.memorable(password.options)
         "random" -> Generator.random(password.options)
         "pin" -> Generator.pin(password.options)
-        "custom" -> password.output
+        "custom" -> password.input
         _ -> %{}
       end
 
@@ -82,6 +83,7 @@ defmodule Password do
       type: password.type,
       options: password.options,
       output: output,
+      input: password.input,
       analysis: analyze(output)
     }
   end
