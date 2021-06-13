@@ -1,7 +1,8 @@
-defmodule Helper do
-  # pid = Helper.live_list() |> hd()
-  # :sys.get_state(pid)
+# Use in iex to view the current state:
+# pid = Helper.live_list() |> hd()
+# :sys.get_state(pid)
 
+defmodule Helper do
   def live_list do
     Process.list()
     |> Enum.map(
