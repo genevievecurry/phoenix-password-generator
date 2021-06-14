@@ -32,7 +32,7 @@ defmodule Password.Validator do
   def separator_input(value) when is_bitstring(value) do
     separator = value |> String.trim() |> String.to_atom()
 
-    if Enum.member?(@separator_types, separator), do: separator, else: :error
+    if Map.has_key?(@separator_types, separator), do: separator, else: :none
   end
 
   @spec bool_input(boolean | binary) :: boolean
