@@ -40,4 +40,10 @@ defmodule PwAppWeb.Ui do
       true -> 0
     end
   end
+
+  def tailwind_colors do
+    # IT GOT PRUNED ON PROD :<
+    # To-do: Fix this and make it better.
+    ["bg-meter-0", "bg-meter-25", "bg-meter-50", "bg-meter-75", "bg-meter-100"]
+  end
 end
