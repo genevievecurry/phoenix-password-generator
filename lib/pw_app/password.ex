@@ -84,7 +84,7 @@ defmodule Password do
   end
 
   @spec analyze(String.t()) :: map()
-  def(analyze(password)) do
+  def analyze(password) do
     score = Analyzer.score(password)
 
     %{

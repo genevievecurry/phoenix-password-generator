@@ -8,7 +8,7 @@
     </div>
     <div class="grid-item-strength bg-white animate <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
       <div class="relative h-full w-full">
-        <div class="absolute inset-x-0 top-0 h-full transition-all flex items-center py-2 px-8 <%= @strength_meter_color %>" style="width: <%= @analysis.strength %>%"></div>
+        <div class="absolute inset-x-0 top-0 h-full transition-all flex items-center py-2 px-8 bg-meter-<%= @strength_meter_color %>" style="width: <%= @analysis.strength %>%"></div>
         <div class="absolute inset-x-0 top-0 text-left h-full text-white flex items-center py-2 px-8">
           <span class="block break-words max-w-full <%= @output_font_size %> text-purple-dark font-mono"><%= @output %></span>
 
@@ -159,7 +159,7 @@
             <h4 class="font-serif text-2xl mb-4 mt-4">Strength</h4>
             <div class="bg-white w-full h-8 m-1">
               <div class="relative h-full w-full">
-                <div class="absolute inset-x-0 top-0 h-full transition-all <%= @strength_meter_color %> flex items-center px-2" style="width: <%= @analysis.strength %>%">
+                <div class="absolute inset-x-0 top-0 h-full transition-all bg-meter-<%= @strength_meter_color %> flex items-center px-2" style="width: <%= @analysis.strength %>%">
                   <span class="text-purple-dark font-mono"><%= @analysis.strength %>%</span>
                 </div>
               </div>
@@ -175,7 +175,7 @@
             <% end %>
             <div class="flex justify-between items-center space-x-3 space-y-1 text-sm">
               <div class="flex-grow font-serif text-xl text-right">Score</div>
-              <div class="<%= @strength_meter_color %> p-1 font-mono w-14 text-center mr-4 text-purple-dark"><%= @analysis.score %></div>
+              <div class="bg-meter-<%= @strength_meter_color %> p-1 font-mono w-14 text-center mr-4 text-purple-dark"><%= @analysis.score %></div>
             </div>
           </div>
         </div>
@@ -188,10 +188,10 @@
               <div class="absolute left-0 top-0 w-full h-full text-purple-dark font-mono flex items-center px-2">
               <span><%= @analysis.zxcvbn.score %>/4</span>
               </div>
-              <%= if @analysis.zxcvbn.score >= 1 do %><div class="<%= @attack_meter_color %> col-span-1"></div><% end %>
-              <%= if @analysis.zxcvbn.score >= 2 do %><div class="<%= @attack_meter_color %> col-span-1"></div><% end %>
-              <%= if @analysis.zxcvbn.score >= 3 do %><div class="<%= @attack_meter_color %> col-span-1"></div><% end %>
-              <%= if @analysis.zxcvbn.score >= 4 do %><div class="<%= @attack_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 1 do %><div class="bg-meter-<%= @attack_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 2 do %><div class="bg-meter-<%= @attack_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 3 do %><div class="bg-meter-<%= @attack_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 4 do %><div class="bg-meter-<%= @attack_meter_color %> col-span-1"></div><% end %>
             </div>
 
             <h4 class="font-serif text-2xl mb-4 mt-10">Estimated Time to Crack</h4>

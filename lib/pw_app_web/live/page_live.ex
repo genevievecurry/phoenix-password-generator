@@ -8,7 +8,7 @@ defmodule PwAppWeb.PageLive do
   alias Password.Options
   alias Password.Constant
   alias Password.Feedback
-  alias Password.Ui
+  alias PwAppWeb.Ui
 
   @separator_types Constant.separator_types()
 
@@ -31,8 +31,8 @@ defmodule PwAppWeb.PageLive do
       |> assign(:analysis, password.analysis)
       |> assign(:separator_types, @separator_types)
       |> assign(:output_font_size, "")
-      |> assign(:strength_meter_color, "bg-white")
-      |> assign(:attack_meter_color, "bg-white")
+      |> assign(:strength_meter_color, 0)
+      |> assign(:attack_meter_color, 0)
       |> assign(:attack_time, [])
       |> assign(:advice, [])
 
