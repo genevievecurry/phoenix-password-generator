@@ -8,6 +8,7 @@ defmodule PwAppWeb.PageLive do
   alias Password.Options
   alias Password.Constant
   alias Password.Feedback
+  alias Password.Validator
   alias PwAppWeb.Ui
 
   @separator_types Constant.separator_types()
@@ -73,10 +74,10 @@ defmodule PwAppWeb.PageLive do
           word_count: String.to_integer(word_count),
           pin_length: String.to_integer(pin_length),
           character_count: String.to_integer(character_count),
-          uppercase: String.to_atom(uppercase),
-          separator_type: String.to_atom(separator_type),
-          symbols: String.to_atom(symbols),
-          numbers: String.to_atom(numbers)
+          uppercase: Validator.bool_input(uppercase),
+          separator_type: Validator.separator_input(separator_type),
+          symbols: Validator.bool_input(symbols),
+          numbers: Validator.bool_input(numbers)
         }
       })
 

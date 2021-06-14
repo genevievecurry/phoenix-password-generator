@@ -111,8 +111,6 @@
             </div>
           </div>
 
-
-
           <div class="flex <%= if Enum.member?(["custom", "pin", ""], @type), do: "hidden" %>">
             <label class="pw-checkbox-style" for="options_numbers">
               <%= checkbox :options, :numbers, value: @options.numbers %>

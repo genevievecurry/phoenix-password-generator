@@ -2,6 +2,11 @@ defmodule Password.Validator do
   @moduledoc """
     To do!
   """
+
+  alias Password.Constant
+
+  @separator_types Constant.separator_types()
+
   @spec parse_integer(binary) :: :error | {integer, binary}
   def parse_integer(value) do
     case value |> String.trim() |> Integer.parse() do
@@ -25,12 +30,14 @@ defmodule Password.Validator do
 
   @spec separator_input(binary) :: atom
   def separator_input(value) when is_bitstring(value) do
-    value |> String.trim() |> String.to_atom()
+    separator = value |> String.trim() |> String.to_atom()
+
+    if Enum.member?(@separator_types, separator), do: separator, else: :error
   end
 
   @spec bool_input(boolean | binary) :: boolean
   def bool_input(value) when is_bitstring(value) do
-    Enum.member?(["y\n", "yes\n", "\n"], String.downcase(value))
+    Enum.member?(["y\n", "yes\n", "\n", "true"], String.downcase(value))
   end
 
   def bool_input(value) when is_boolean(value), do: value
