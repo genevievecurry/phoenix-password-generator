@@ -33,20 +33,18 @@ defmodule Password.Analyzer do
     length = String.length(password)
     count = Regex.scan(~r/[[:upper:]]/u, password) |> Enum.count()
 
-    cond do
-      count > 0 -> {:addition, (length - count) * 2}
-      true -> {:addition, 0}
-    end
+    if count > 0,
+      do: {:addition, (length - count) * 2},
+      else: {:addition, 0}
   end
 
   def check(:lowercase, password) do
     length = String.length(password)
     count = Regex.scan(~r/[[:lower:]]/u, password) |> Enum.count()
 
-    cond do
-      count > 0 -> {:addition, (length - count) * 2}
-      true -> {:addition, 0}
-    end
+    if count > 0,
+      do: {:addition, (length - count) * 2},
+      else: {:addition, 0}
   end
 
   def check(:numbers, password) do
@@ -63,30 +61,27 @@ defmodule Password.Analyzer do
     # At least 1 number, 1 special character, mix of upper and lower characters, between 8-100 characters long
     strong_password_regex = ~r/((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,100})/u
 
-    cond do
-      Regex.match?(strong_password_regex, password) == true -> {:addition, 10}
-      true -> {:addition, 0}
-    end
+    if Regex.match?(strong_password_regex, password) == true,
+      do: {:addition, 10},
+      else: {:addition, 0}
   end
 
   def check(:letters_only, password) do
     length = String.length(password)
     count = Regex.scan(~r/[[:alpha:]]/u, password) |> Enum.count()
 
-    cond do
-      length == count -> {:deduction, count * -1}
-      true -> {:deduction, 0}
-    end
+    if length == count,
+      do: {:deduction, count * -1},
+      else: {:deduction, 0}
   end
 
   def check(:numbers_only, password) do
     length = String.length(password)
     count = Regex.scan(~r/[[:digit:]]/u, password) |> Enum.count()
 
-    cond do
-      length == count -> {:deduction, count * -1}
-      true -> {:deduction, 0}
-    end
+    if length == count,
+      do: {:deduction, count * -1},
+      else: {:deduction, 0}
   end
 
   def check(:repeat_characters, password) do

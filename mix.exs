@@ -43,7 +43,8 @@ defmodule PwApp.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:zxcvbn, "~> 0.1.3"}
+      {:zxcvbn, "~> 0.1.3"},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
     ]
   end
 

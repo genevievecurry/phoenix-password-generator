@@ -6,11 +6,6 @@ defmodule Password do
   - Memorable passwords should also be difficult to crack, but are easier to remember as they use full words from the English dictionary
   - PINs are simply a set of numbers
 
-
-  ## Examples
-      iex> Password.start()
-
-
   """
   alias Password.Generator
   alias Password.Options

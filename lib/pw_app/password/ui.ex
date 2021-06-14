@@ -1,4 +1,7 @@
 defmodule Password.Ui do
+  @moduledoc """
+    To do!
+  """
   @spec output_font_size(integer()) :: String.t()
   def output_font_size(output) do
     cond do
@@ -27,8 +30,8 @@ defmodule Password.Ui do
     end
   end
 
-  @spec crackable_meter_color(integer()) :: String.t()
-  def crackable_meter_color(score) do
+  @spec attack_meter_color(integer()) :: String.t()
+  def attack_meter_color(score) do
     cond do
       score == 1 -> "bg-meter-25"
       score == 2 -> "bg-meter-50"

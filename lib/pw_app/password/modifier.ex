@@ -1,4 +1,7 @@
 defmodule Password.Modifier do
+  @moduledoc """
+    To do!
+  """
   alias Password.Random
   alias Password.Constant
 

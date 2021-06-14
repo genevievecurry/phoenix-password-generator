@@ -181,22 +181,22 @@
         </div>
         <div class="flex-1">
           <div class="<%= if @analysis.analyzed, do: "visible", else: "hidden" %>">
-            <h3 class="font-serif text-3xl mb-4">Crackability Attributes</h3>
+            <h3 class="font-serif text-3xl mb-4">Brute-force Attack Resistance</h3>
             <h4 class="font-serif text-2xl mb-4 mt-4">Score</h4>
 
             <div class="grid grid-cols-4 gap-x-1 h-8 m-1 bg-white relative">
               <div class="absolute left-0 top-0 w-full h-full text-purple-dark font-mono flex items-center px-2">
               <span><%= @analysis.zxcvbn.score %>/4</span>
               </div>
-              <%= if @analysis.zxcvbn.score >= 1 do %><div class="<%= @crackable_meter_color %> col-span-1"></div><% end %>
-              <%= if @analysis.zxcvbn.score >= 2 do %><div class="<%= @crackable_meter_color %> col-span-1"></div><% end %>
-              <%= if @analysis.zxcvbn.score >= 3 do %><div class="<%= @crackable_meter_color %> col-span-1"></div><% end %>
-              <%= if @analysis.zxcvbn.score >= 4 do %><div class="<%= @crackable_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 1 do %><div class="<%= @attack_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 2 do %><div class="<%= @attack_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 3 do %><div class="<%= @attack_meter_color %> col-span-1"></div><% end %>
+              <%= if @analysis.zxcvbn.score >= 4 do %><div class="<%= @attack_meter_color %> col-span-1"></div><% end %>
             </div>
 
             <h4 class="font-serif text-2xl mb-4 mt-10">Estimated Time to Crack</h4>
-            <%= Enum.map @crackable_time, fn attack -> %>
-              <div class="flex flex-col mb-2 text-purple-dark p-3 <%= attack.color %>">
+            <%= Enum.map @attack_time, fn attack -> %>
+              <div class="flex flex-col mb-2 text-purple-dark p-3 bg-meter-<%= attack.severity %>">
                 <div class="flex justify-between font-serif">
                   <div><%= attack.rate %></div>
                   <div><%= attack.label %></div>
@@ -226,16 +226,15 @@
 
           <h3 class="font-serif text-3xl mb-4">Notes on Generator & Analysis</h3>
           <ul class="list-disc ml-6 font-thin">
-            <li class="mb-2">The password generator uses the <a href="https://1password.com/password-generator/" target="_blank" rel="noreferrer" class="text-lime">1Password Strong Password Generator</a> as a baseline for generating passwords, with a few modifications. The "memorable" passwords that my tool generates uses is from a <a href="https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-medium.txt" target="_blank" rel="noreferrer" class="text-lime">list of about ~5000 English words</a> that are between 5-8 characters.</li>
-            <li class="mb-2">The analysis uses <a href="http://www.passwordmeter.com/" target="_blank" rel="noreferrer" class="text-lime">The Password Meter</a> as a baseline for the "common attributes" factors used to score passwords, with a few modifications.</li>
-            <li class="mb-2">For "crackability attributes", <a href="https://github.com/dropbox/zxcvbn" target="_blank" rel="noreferrer" class="text-lime">zxcvbn</a> is used to test password strength against brute force attacks. I used an <a href="https://github.com/techgaun/zxcvbn-elixir" target="_blank" rel="noreferrer" class="text-lime">elixir port</a> of this library for this project. <a href="https://dropbox.tech/security/zxcvbn-realistic-password-strength-estimation" target="_blank" rel="noreferrer" class="text-lime">Dan Wheeler's essay on how to test for a strong password</a> is an interesting read. He notes that the following are also important factors in password security:
+            <li class="mb-2">The password generator uses the <a href="https://1password.com/password-generator/" target="_blank" rel="noreferrer" class="text-lime">1Password Strong Password Generator</a> as inspiration for generating passwords, with a few modifications. The "memorable" passwords that my tool generates uses words from a <a href="https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-medium.txt" target="_blank" rel="noreferrer" class="text-lime">list of about ~5000 English words</a> that are between 5-8 characters.</li>
+            <li class="mb-2">The analysis uses <a href="http://www.passwordmeter.com/" target="_blank" rel="noreferrer" class="text-lime">The Password Meter</a> as inspiration for the "common attributes" factors used to score passwords, with a few modifications. A strength rating of 100% is given to passwords that score 150 or higher. These are based loosely around the minimum requirements that many applications set for user accounts.</li>
+            <li class="mb-2">For "brute-force attack resistance", <a href="https://github.com/dropbox/zxcvbn" target="_blank" rel="noreferrer" class="text-lime">zxcvbn</a> is used to test password strength against brute force attacks. I used an <a href="https://github.com/techgaun/zxcvbn-elixir" target="_blank" rel="noreferrer" class="text-lime">elixir port</a> of this library for this project. <a href="https://dropbox.tech/security/zxcvbn-realistic-password-strength-estimation" target="_blank" rel="noreferrer" class="text-lime">Dan Wheeler's essay on how to test for a strong password</a> is an interesting read. He notes that the following are also important factors in password security:
               <ul class="list-disc ml-6">
                 <li>Preventing online cracking with throttling or CAPTCHAs.</li>
                 <li>Preventing offline cracking by selecting a suitably slow hash function with user-unique salts.</li>
                 <li>Securing said password hashes.</li>
               </ul>
             </li>
-            <li class="mb-2">A strength rating of 100% is given to passwords that score 150 or higher based on the semi-arbitrary factors listed.</li>
             <li class="mb-2">You can find the repository for this project at <a href="https://github.com/genevievecurry/phoenix-password-generator" target="_blank" rel="noreferrer" class="text-lime">github.com/genevievecurry/phoenix-password-generator</a>.</li>
           </ul>
         </div>

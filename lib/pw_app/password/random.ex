@@ -1,4 +1,7 @@
 defmodule Password.Random do
+  @moduledoc """
+    To do!
+  """
   use Agent
   alias Password.Constant
 

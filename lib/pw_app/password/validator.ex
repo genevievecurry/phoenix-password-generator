@@ -1,4 +1,7 @@
 defmodule Password.Validator do
+  @moduledoc """
+    To do!
+  """
   @spec parse_integer(binary) :: :error | {integer, binary}
   def parse_integer(value) do
     case value |> String.trim() |> Integer.parse() do
@@ -13,24 +16,11 @@ defmodule Password.Validator do
   @spec check_length_input(binary | integer, any, any) :: :error | integer
   def check_length_input(value, min, max) when is_bitstring(value) do
     parsed_value = parse_integer(value)
-
-    cond do
-      parsed_value >= min and parsed_value <= max ->
-        parsed_value
-
-      true ->
-        :error
-    end
+    if parsed_value >= min and parsed_value <= max, do: parsed_value, else: :error
   end
 
   def check_length_input(value, min, max) when is_integer(value) do
-    cond do
-      value >= min and value <= max ->
-        value
-
-      true ->
-        :error
-    end
+    if value >= min and value <= max, do: value, else: :error
   end
 
   @spec separator_input(binary) :: atom

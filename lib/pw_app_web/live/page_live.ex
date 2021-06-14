@@ -1,4 +1,8 @@
 defmodule PwAppWeb.PageLive do
+  @moduledoc """
+    To do!
+  """
+
   use PwAppWeb, :live_view
 
   alias Password.Options
@@ -28,8 +32,8 @@ defmodule PwAppWeb.PageLive do
       |> assign(:separator_types, @separator_types)
       |> assign(:output_font_size, "")
       |> assign(:strength_meter_color, "bg-white")
-      |> assign(:crackable_meter_color, "bg-white")
-      |> assign(:crackable_time, [])
+      |> assign(:attack_meter_color, "bg-white")
+      |> assign(:attack_time, [])
       |> assign(:advice, [])
 
     {:ok, socket}
@@ -85,8 +89,8 @@ defmodule PwAppWeb.PageLive do
        analysis: results.analysis,
        output_font_size: Ui.output_font_size(String.length(results.output)),
        strength_meter_color: Ui.strength_meter_color(results.analysis.strength),
-       crackable_meter_color: Ui.crackable_meter_color(results.analysis.zxcvbn.score),
-       crackable_time: Feedback.crackable_time(results.analysis.zxcvbn.crack_times_display),
+       attack_meter_color: Ui.attack_meter_color(results.analysis.zxcvbn.score),
+       attack_time: Feedback.attack_time(results.analysis.zxcvbn.crack_times_display),
        advice: Feedback.advice(results.analysis, results.type),
        show_section: %{
          strength: Enum.member?(["memorable", "pin", "random"], type),
@@ -122,8 +126,8 @@ defmodule PwAppWeb.PageLive do
        advice: Feedback.advice(results.analysis, results.type),
        output_font_size: Ui.output_font_size(String.length(results.output)),
        strength_meter_color: Ui.strength_meter_color(results.analysis.strength),
-       crackable_meter_color: Ui.crackable_meter_color(results.analysis.zxcvbn.score),
-       crackable_time: Feedback.crackable_time(results.analysis.zxcvbn.crack_times_display),
+       attack_meter_color: Ui.attack_meter_color(results.analysis.zxcvbn.score),
+       attack_time: Feedback.attack_time(results.analysis.zxcvbn.crack_times_display),
        show_section: %{strength: false, refresh: false, next: true, analysis: true}
      })}
   end
@@ -148,8 +152,8 @@ defmodule PwAppWeb.PageLive do
        advice: Feedback.advice(results.analysis, results.type),
        output_font_size: Ui.output_font_size(String.length(results.output)),
        strength_meter_color: Ui.strength_meter_color(results.analysis.strength),
-       crackable_meter_color: Ui.crackable_meter_color(results.analysis.zxcvbn.score),
-       crackable_time: Feedback.crackable_time(results.analysis.zxcvbn.crack_times_display)
+       attack_meter_color: Ui.attack_meter_color(results.analysis.zxcvbn.score),
+       attack_time: Feedback.attack_time(results.analysis.zxcvbn.crack_times_display)
      })}
   end
 end
