@@ -2,14 +2,14 @@
   <div class="grid-container lg:overflow-x-hidden <%= if @type == "", do: "animate-off overflow-x-hidden", else: "animate-on" %>">
 
     <%= # Password Type Selection %>
-    <div class="grid-item-first bg-white flex items-center">
+    <div class="grid-item-first bg-white flex items-center max-w-screen-sm lg:max-w-none">
       <div class="px-8">
         <h2 class="font-serif text-5xl text-purple-dark">First</h2>
         <p class="font-light text-purple-dark text-sm">What type of password do you need?</p>
       </div>
     </div>
 
-    <div class="grid-item-first-options bg-pink">
+    <div class="grid-item-first-options bg-pink max-w-screen-sm lg:max-w-none">
       <div class="p-8">
         <label class="pw-radio-style" for="memorable">
           <input name="type" value="memorable" type="radio" id="memorable" class="hidden" <%= if @type == "memorable", do: "checked" %>>
@@ -31,24 +31,24 @@
     </div>
 
     <%= # Strength Meter %>
-    <div class="grid-item-strength bg-white animate <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
+    <div class="grid-item-strength-label flex items-center px-8 animate mt-3 lg:mt-0 <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
+      <span class="whitespace-nowrap font-serif text-white lg:text-right w-full block">
+        This password is <%= @analysis.strength %>% <strong class="">awesome</strong>.
+      </span>
+    </div>
+
+    <div class="grid-item-strength bg-white max-w-screen-sm lg:max-w-none animate <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
       <div class="relative h-full w-full">
-        <div class="absolute inset-x-0 top-0 h-full transition-all flex items-center py-2 px-8 bg-meter-<%= @strength_meter_color %>" style="width: <%= @analysis.strength %>%"></div>
-        <div class="absolute inset-x-0 top-0 text-left h-full text-white flex items-center py-2 px-8">
+        <div class="lg:absolute inset-x-0 top-0 h-full transition-all flex items-center py-2 px-8 bg-meter-<%= @strength_meter_color %>" style="width: <%= @analysis.strength %>%"></div>
+        <div class="lg:absolute inset-x-0 top-0 text-left h-full text-white flex items-center py-2 px-8">
           <span class="block break-words max-w-full <%= @output_font_size %> text-purple-dark font-mono"><%= @output %></span>
         </div>
       </div>
     </div>
 
-    <div class="grid-item-strength-label flex items-center px-8 animate <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
-      <span class="whitespace-nowrap font-serif text-white text-right w-full block">
-        This password is <%= @analysis.strength %>% <strong class="">awesome</strong>.
-      </span>
-    </div>
-
     <%= # Regenerate Password %>
     <%= if Enum.member?(["memorable", "pin", "random"], @type) do %>
-      <div class="grid-item-refresh relative animate <%= if @show_section.refresh, do: "fadeInLeft", else: "fadeOutLeft " %>">
+      <div class="grid-item-refresh relative max-w-screen-sm lg:max-w-none animate <%= if @show_section.refresh, do: "fadeInLeft", else: "fadeOutLeft " %>">
         <div class="pw-regenerate bg-white w-full p-8 flex flex-col items-center justify-center cursor-pointer transition-all text-purple-dark hover:text-purple" phx-click="refresh">
           <div class="transition-all transform rotate-0 duration-300">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -61,14 +61,14 @@
     <% end %>
 
     <%= # Password Options Inputs %>
-    <div class="grid-item-next-options bg-pink relative animate <%= if @show_section.next, do: "fadeInRight", else: "fadeOutRight" %>">
-      <div class="bg-white absolute left-0 transform -translate-y-2/4 z-10 flex items-center h-100">
+    <div class="grid-item-next-options bg-pink relative animate my-4 lg:my-0 max-w-screen-sm lg:max-w-none <%= if @show_section.next, do: "fadeInRight", else: "fadeOutRight" %>">
+      <div class="bg-white lg:absolute lg:left-0 lg:transform lg:-translate-y-2/4 z-10 flex items-center h-100">
         <div class="px-8">
           <h2 class="font-serif text-5xl text-purple-dark">Next</h2>
           <p class="font-light text-purple-dark text-sm"><%= if @type != "custom", do: "Adjust it to your requirements.", else: "Bring Your Own Password" %></p>
         </div>
       </div>
-      <div class="p-8 mt-14">
+      <div class="p-8 lg:mt-14">
 
         <%= # Custom Input %>
         <section class="<%= if @type != "custom", do: "hidden" %>">
@@ -103,16 +103,16 @@
         </section>
         <section class="mb-6 <%= if @type != "memorable", do: "hidden" %>">
           <span class="font-serif block text-lg">What goes between the words?</span>
-          <div class="flex space-x-4 items-stretch mt-2">
+          <div class="mt-2 lg:flex lg:space-x-4  lg:items-stretch">
             <%= Enum.map @separator_types, fn {key, _value} -> %>
-              <label class="pw-separator-type flex flex-1 items-center justify-center">
-                  <%= radio_button(:options, :separator_type, Atom.to_string(key), [checked: @options.separator_type == key, class: "hidden"]) %>
-                  <div class="w-full py-3 px-4 text-center transition-all transform-gpu hover:scale-110 cursor-pointer">
-                    <div class="flex flex-col items-center justify-center">
-                      <div class="h-4 flex content-end"><img src="/images/<%= key %>.svg" /></div>
-                      <span class="font-sans text-xs uppercase text-white"><%= Atom.to_string(key) |> String.capitalize() %></span>
-                    </div>
+              <label class="pw-separator-type inline-flex py-1 lg:py-0 lg:flex flex-1 items-center justify-center">
+                <%= radio_button(:options, :separator_type, Atom.to_string(key), [checked: @options.separator_type == key, class: "hidden"]) %>
+                <div class="w-full py-3 px-4 text-center transition-all transform-gpu hover:scale-110 cursor-pointer">
+                  <div class="flex flex-col items-center justify-center">
+                    <div class="h-4 flex content-end"><img src="/images/<%= key %>.svg" /></div>
+                    <span class="font-sans text-xs uppercase text-white"><%= Atom.to_string(key) |> String.capitalize() %></span>
                   </div>
+                </div>
               </label>
             <% end %>
           </div>
@@ -143,16 +143,16 @@
     <div class="bg-purple-dark p-8 text-white animate <%= if @show_section.analysis, do: "fadeInUp", else: "fadeOutDown" %>">
 
       <%= # Analysis Common Attributes %>
-      <div class="flex justify-between items-center mb-10">
+      <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-10">
         <h2 class="font-serif text-5xl">Analysis</h2>
         <%= if String.length(@output) > 0 do %>
-          <div class="ml-8">
-            Analyzing:
+          <div class="lg:ml-8">
+            <span class="hidden lg:block">Analyzing:</span>
             <span class="font-mono block mt-2 bg-purple p-2"><%= @output %></span>
           </div>
         <% end %>
       </div>
-      <div class="flex space-x-20">
+      <div class="flex flex-col lg:flex-row lg:space-x-20">
         <div class="flex-1">
           <div class="<%= if @analysis.analyzed, do: "hidden", else: "visible" %>">
             <p class="font-serif text-white text-lg">Enter a password above to receive an analysis.</p>
@@ -184,7 +184,7 @@
         </div>
 
         <%= # Analysis Brute-force Attack Resistance %>
-        <div class="flex-1">
+        <div class="mt-14 lg:mt-0 flex-1">
           <div class="<%= if @analysis.analyzed, do: "visible", else: "hidden" %>">
             <h3 class="font-serif text-3xl mb-4">Brute-force Attack Resistance</h3>
             <h4 class="font-serif text-2xl mb-4 mt-4">Score</h4>
@@ -213,7 +213,7 @@
         </div>
 
         <%= # Analysis Feedback & Notes %>
-        <div class="flex-1">
+        <div class="mt-14 lg:mt-0 flex-1">
           <div class="<%= if @analysis.strength < 100 and @analysis.analyzed, do: "visible mb-10", else: "hidden" %>">
             <h3 class="font-serif text-3xl mb-4">Feedback</h3>
             <ul class="list-disc ml-6 font-thin">
