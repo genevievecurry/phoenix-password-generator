@@ -1,25 +1,14 @@
 <%= _f = form_for :atom, "", [phx_change: :generate, phx_submit: :analyze] %>
   <div class="grid-container lg:overflow-x-hidden <%= if @type == "", do: "animate-off overflow-x-hidden", else: "animate-on" %>">
+
+    <%= # Password Type Selection %>
     <div class="grid-item-first bg-white flex items-center">
       <div class="px-8">
         <h2 class="font-serif text-5xl text-purple-dark">First</h2>
         <p class="font-light text-purple-dark text-sm">What type of password do you need?</p>
       </div>
     </div>
-    <div class="grid-item-strength bg-white animate <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
-      <div class="relative h-full w-full">
-        <div class="absolute inset-x-0 top-0 h-full transition-all flex items-center py-2 px-8 bg-meter-<%= @strength_meter_color %>" style="width: <%= @analysis.strength %>%"></div>
-        <div class="absolute inset-x-0 top-0 text-left h-full text-white flex items-center py-2 px-8">
-          <span class="block break-words max-w-full <%= @output_font_size %> text-purple-dark font-mono"><%= @output %></span>
 
-        </div>
-      </div>
-    </div>
-    <div class="grid-item-strength-label flex items-center px-8 animate <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
-      <span class="whitespace-nowrap font-serif text-white text-right w-full block">
-        This password is <%= @analysis.strength %>% <strong class="">awesome</strong>.
-      </span>
-    </div>
     <div class="grid-item-first-options bg-pink">
       <div class="p-8">
         <label class="pw-radio-style" for="memorable">
@@ -41,6 +30,23 @@
       </div>
     </div>
 
+    <%= # Strength Meter %>
+    <div class="grid-item-strength bg-white animate <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
+      <div class="relative h-full w-full">
+        <div class="absolute inset-x-0 top-0 h-full transition-all flex items-center py-2 px-8 bg-meter-<%= @strength_meter_color %>" style="width: <%= @analysis.strength %>%"></div>
+        <div class="absolute inset-x-0 top-0 text-left h-full text-white flex items-center py-2 px-8">
+          <span class="block break-words max-w-full <%= @output_font_size %> text-purple-dark font-mono"><%= @output %></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-item-strength-label flex items-center px-8 animate <%= if @show_section.strength, do: "fadeInRight", else: "fadeOutRight" %>">
+      <span class="whitespace-nowrap font-serif text-white text-right w-full block">
+        This password is <%= @analysis.strength %>% <strong class="">awesome</strong>.
+      </span>
+    </div>
+
+    <%= # Regenerate Password %>
     <%= if Enum.member?(["memorable", "pin", "random"], @type) do %>
       <div class="grid-item-refresh relative animate <%= if @show_section.refresh, do: "fadeInLeft", else: "fadeOutLeft " %>">
         <div class="pw-regenerate bg-white w-full p-8 flex flex-col items-center justify-center cursor-pointer transition-all text-purple-dark hover:text-purple" phx-click="refresh">
@@ -49,12 +55,12 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
           </div>
-
           <span class="text-xs mt-3">Regenerate Password</span>
         </div>
       </div>
     <% end %>
 
+    <%= # Password Options Inputs %>
     <div class="grid-item-next-options bg-pink relative animate <%= if @show_section.next, do: "fadeInRight", else: "fadeOutRight" %>">
       <div class="bg-white absolute left-0 transform -translate-y-2/4 z-10 flex items-center h-100">
         <div class="px-8">
@@ -63,6 +69,8 @@
         </div>
       </div>
       <div class="p-8 mt-14">
+
+        <%= # Custom Input %>
         <section class="<%= if @type != "custom", do: "hidden" %>">
           <label for="input">Enter your password: </label>
           <div class="flex mt-2">
@@ -71,66 +79,61 @@
           </div>
         </section>
 
-        <section>
-          <div class="mb-6 w-full <%= if @type != "memorable", do: "hidden" %>">
-            <%= label(:options, :word_count, "How many words?") %>
-            <div class="flex mt-2 w-full items-center">
-              <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.word_count %></span>
-              <%= range_input(:options, :word_count, [min: 3, max: 15, value: @options.word_count, class: "flex-grow", phx_debounce: 250]) %>
-            </div>
+        <%= # Generated Password Inputs %>
+        <section class="mb-6 w-full <%= if @type != "memorable", do: "hidden" %>">
+          <%= label(:options, :word_count, "How many words?") %>
+          <div class="flex mt-2 w-full items-center">
+            <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.word_count %></span>
+            <%= range_input(:options, :word_count, [min: 3, max: 15, value: @options.word_count, class: "flex-grow", phx_debounce: 250]) %>
           </div>
-          <div class="mb-6 w-full <%= if @type != "pin", do: "hidden" %>">
-            <%= label(:options, :pin_length, "PIN Length") %>
-            <div class="flex mt-2 w-full items-center">
-              <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.pin_length %></span>
-              <%= range_input(:options, :pin_length, [min: 3, max: 16, value: @options.pin_length, class: "flex-grow", phx_debounce: 250]) %>
-            </div>
+        </section>
+        <section class="mb-6 w-full <%= if @type != "pin", do: "hidden" %>">
+          <%= label(:options, :pin_length, "PIN Length") %>
+          <div class="flex mt-2 w-full items-center">
+            <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.pin_length %></span>
+            <%= range_input(:options, :pin_length, [min: 3, max: 16, value: @options.pin_length, class: "flex-grow", phx_debounce: 250]) %>
           </div>
-          <div class="mb-6 w-full <%= if @type != "random", do: "hidden" %>">
-            <%= label(:options, :character_count, "Character Count") %>
-            <div class="flex mt-2 w-full items-center">
-              <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.character_count %></span>
-              <%= range_input(:options, :character_count, [min: 8, max: 99, value: @options.character_count, class: "flex-grow", phx_debounce: 250]) %>
-            </div>
+        </section>
+        <section class="mb-6 w-full <%= if @type != "random", do: "hidden" %>">
+          <%= label(:options, :character_count, "Character Count") %>
+          <div class="flex mt-2 w-full items-center">
+            <span class="bg-white p-1 font-serif text-xl w-7 text-center mr-4"><%= @options.character_count %></span>
+            <%= range_input(:options, :character_count, [min: 8, max: 99, value: @options.character_count, class: "flex-grow", phx_debounce: 250]) %>
           </div>
-
-          <div class="mb-6 <%= if @type != "memorable", do: "hidden" %>">
-            <span class="font-serif block text-lg">What goes between the words?</span>
-            <div class="flex space-x-4 items-stretch mt-2">
-              <%= Enum.map @separator_types, fn {key, _value} -> %>
-                <label class="pw-separator-type flex flex-1 items-center justify-center">
-                    <%= radio_button(:options, :separator_type, Atom.to_string(key), [checked: @options.separator_type == key, class: "hidden"]) %>
-                    <div class="w-full py-3 px-4 text-center transition-all transform-gpu hover:scale-110 cursor-pointer">
-                      <div class="flex flex-col items-center justify-center">
-                        <div class="h-4 flex content-end"><img src="/images/<%= key %>.svg" /></div>
-                        <span class="font-sans text-xs uppercase text-white"><%= Atom.to_string(key) |> String.capitalize() %></span>
-                      </div>
+        </section>
+        <section class="mb-6 <%= if @type != "memorable", do: "hidden" %>">
+          <span class="font-serif block text-lg">What goes between the words?</span>
+          <div class="flex space-x-4 items-stretch mt-2">
+            <%= Enum.map @separator_types, fn {key, _value} -> %>
+              <label class="pw-separator-type flex flex-1 items-center justify-center">
+                  <%= radio_button(:options, :separator_type, Atom.to_string(key), [checked: @options.separator_type == key, class: "hidden"]) %>
+                  <div class="w-full py-3 px-4 text-center transition-all transform-gpu hover:scale-110 cursor-pointer">
+                    <div class="flex flex-col items-center justify-center">
+                      <div class="h-4 flex content-end"><img src="/images/<%= key %>.svg" /></div>
+                      <span class="font-sans text-xs uppercase text-white"><%= Atom.to_string(key) |> String.capitalize() %></span>
                     </div>
-                </label>
-              <% end %>
-            </div>
+                  </div>
+              </label>
+            <% end %>
           </div>
-
-          <div class="flex <%= if Enum.member?(["custom", "pin", ""], @type), do: "hidden" %>">
-            <label class="pw-checkbox-style" for="options_numbers">
-              <%= checkbox :options, :numbers, value: @options.numbers %>
-              <div><span><%= if @type == "memorable", do: "Append Number", else: "Include Numbers" %></span></div>
-            </label>
-          </div>
-
-          <div class="flex <%= if Enum.member?(["custom", "pin", ""], @type), do: "hidden" %>">
-            <label class="pw-checkbox-style" for="options_symbols">
-              <%= checkbox :options, :symbols, value: @options.symbols %>
-              <div><span><%= if @type == "memorable", do: "Append Symbol", else: "Include Symbols" %></span></div>
-            </label>
-          </div>
-
-          <div class="flex <%= if @type != "memorable", do: "hidden" %>">
-            <label class="pw-checkbox-style" for="options_uppercase">
-              <%= checkbox :options, :uppercase, value: @options.uppercase %>
-              <div><span>Include Uppercase Word(s)</span></div>
-            </label>
-          </div>
+        </section>
+        <section class="flex <%= if Enum.member?(["custom", "pin", ""], @type), do: "hidden" %>">
+          <label class="pw-checkbox-style" for="options_numbers">
+            <%= checkbox :options, :numbers, value: @options.numbers %>
+            <div><span><%= if @type == "memorable", do: "Append Number", else: "Include Numbers" %></span></div>
+          </label>
+        </section>
+        <section class="flex <%= if Enum.member?(["custom", "pin", ""], @type), do: "hidden" %>">
+          <label class="pw-checkbox-style" for="options_symbols">
+            <%= checkbox :options, :symbols, value: @options.symbols %>
+            <div><span><%= if @type == "memorable", do: "Append Symbol", else: "Include Symbols" %></span></div>
+          </label>
+        </section>
+        <section class="flex <%= if @type != "memorable", do: "hidden" %>">
+          <label class="pw-checkbox-style" for="options_uppercase">
+            <%= checkbox :options, :uppercase, value: @options.uppercase %>
+            <div><span>Include Uppercase Word(s)</span></div>
+          </label>
         </section>
       </div>
     </div>
@@ -138,7 +141,9 @@
 
   <div class="<%= if @type == "" or @show_section.analysis == false, do: "animate-off overflow-y-hidden hidden", else: "animate-on" %>">
     <div class="bg-purple-dark p-8 text-white animate <%= if @show_section.analysis, do: "fadeInUp", else: "fadeOutDown" %>">
-      <div class="grid-item-analysis-header flex justify-between items-center mb-10">
+
+      <%= # Analysis Common Attributes %>
+      <div class="flex justify-between items-center mb-10">
         <h2 class="font-serif text-5xl">Analysis</h2>
         <%= if String.length(@output) > 0 do %>
           <div class="ml-8">
@@ -177,21 +182,21 @@
             </div>
           </div>
         </div>
+
+        <%= # Analysis Brute-force Attack Resistance %>
         <div class="flex-1">
           <div class="<%= if @analysis.analyzed, do: "visible", else: "hidden" %>">
             <h3 class="font-serif text-3xl mb-4">Brute-force Attack Resistance</h3>
             <h4 class="font-serif text-2xl mb-4 mt-4">Score</h4>
-
             <div class="grid grid-cols-4 gap-x-1 h-8 m-1 bg-white relative">
               <div class="absolute left-0 top-0 w-full h-full text-purple-dark font-mono flex items-center px-2">
-              <span><%= @analysis.zxcvbn.score %>/4</span>
+                <span><%= @analysis.zxcvbn.score %>/4</span>
               </div>
               <%= if @analysis.zxcvbn.score >= 1 do %><div class="bg-meter-<%= @attack_meter_color %> col-span-1"></div><% end %>
               <%= if @analysis.zxcvbn.score >= 2 do %><div class="bg-meter-<%= @attack_meter_color %> col-span-1"></div><% end %>
               <%= if @analysis.zxcvbn.score >= 3 do %><div class="bg-meter-<%= @attack_meter_color %> col-span-1"></div><% end %>
               <%= if @analysis.zxcvbn.score >= 4 do %><div class="bg-meter-<%= @attack_meter_color %> col-span-1"></div><% end %>
             </div>
-
             <h4 class="font-serif text-2xl mb-4 mt-10">Estimated Time to Crack</h4>
             <%= Enum.map @attack_time, fn attack -> %>
               <div class="flex flex-col mb-2 text-purple-dark p-3 bg-meter-<%= attack.severity %>">
@@ -206,22 +211,20 @@
             <% end %>
           </div>
         </div>
+
+        <%= # Analysis Feedback & Notes %>
         <div class="flex-1">
           <div class="<%= if @analysis.strength < 100 and @analysis.analyzed, do: "visible mb-10", else: "hidden" %>">
             <h3 class="font-serif text-3xl mb-4">Feedback</h3>
-
             <ul class="list-disc ml-6 font-thin">
-
               <%= if String.length(@analysis.zxcvbn.feedback.warning) > 0 do %>
                 <li class="mb-2 text-pink-dark font-bold">Warning: <%= @analysis.zxcvbn.feedback.warning %></li>
               <% end %>
-
               <%= Enum.map @advice, fn item -> %>
                 <li class="mb-2"><%= item %></li>
               <% end %>
             </ul>
           </div>
-
           <h3 class="font-serif text-3xl mb-4">Notes on Generator & Analysis</h3>
           <ul class="list-disc ml-6 font-thin">
             <li class="mb-2">The password generator uses the <a href="https://1password.com/password-generator/" target="_blank" rel="noreferrer" class="text-lime">1Password Strong Password Generator</a> as inspiration for generating passwords, with a few modifications. The "memorable" passwords that my tool generates uses words from a <a href="https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-medium.txt" target="_blank" rel="noreferrer" class="text-lime">list of about ~5000 English words</a> that are between 5-8 characters.</li>

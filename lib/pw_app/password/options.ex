@@ -13,7 +13,8 @@ defmodule Password.Options do
   ```
   """
 
-  defstruct word_count: 3,
+  defstruct type: "",
+            word_count: 3,
             pin_length: 4,
             character_count: 8,
             uppercase: true,
