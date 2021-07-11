@@ -10,7 +10,7 @@ For "brute-force attack resistance", [zxcvbn](https://github.com/dropbox/zxcvbn)
 - Preventing offline cracking by selecting a suitably slow hash function with user-unique salts.
 - Securing said password hashes.
 
-## Live Demo
+## Live Demo on Gigalixir
 
 [https://gross-warped-trogon.gigalixirapp.com](https://gross-warped-trogon.gigalixirapp.com)
 
