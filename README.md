@@ -30,9 +30,9 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 ## To-Do
 
-- Write Documentation
-- Write Tests
-- Browser Testing
+- Write Documentation!
+- Write Tests!
+- Browser Testing!
 - Make it responsive?
 
 ## Learn more
