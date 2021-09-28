@@ -1,4 +1,4 @@
-# Phoenix Password Generator & Analyzer
+# Deluxe Phoenix Password Generator & Analyzer
 
 The password generator uses the [1Password Strong Password Generator](https://1password.com/password-generator/) as inspiration for generating passwords, with a few modifications. The "memorable" passwords that my tool generates uses words from a [list of about ~5000 English words](https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-medium.txt) that are between 5-8 characters.
 
