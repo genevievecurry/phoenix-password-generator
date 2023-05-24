@@ -18,27 +18,27 @@ config :pw_app, PwAppWeb.Endpoint,
 config :logger, level: :info
 
 # ## SSL Support
-secret_key_base =
-  System.get_env("SECRET_KEY_BASE") ||
-    raise """
-    environment variable SECRET_KEY_BASE is missing.
-    """
+# secret_key_base =
+#   System.get_env("SECRET_KEY_BASE") ||
+#     raise """
+#     environment variable SECRET_KEY_BASE is missing.
+#     """
 
-host =
-  System.get_env("PHX_HOST") ||
-    raise """
-    environment variable PHX_HOST is missing.
-    """
+# host =
+#   System.get_env("PHX_HOST") ||
+#     raise """
+#     environment variable PHX_HOST is missing.
+#     """
 
-config :pw_app, PwAppWeb.Endpoint,
-  # Possibly not needed, but doesn't hurt
-  http: [
-    ip: {0, 0, 0, 0, 0, 0, 0, 0},
-    port: String.to_integer(System.get_env("PORT") || "4000")
-  ],
-  url: [host: host, port: 80],
-  secret_key_base: secret_key_base,
-  server: true
+# config :pw_app, PwAppWeb.Endpoint,
+#   # Possibly not needed, but doesn't hurt
+#   http: [
+#     ip: {0, 0, 0, 0, 0, 0, 0, 0},
+#     port: String.to_integer(System.get_env("PORT") || "4000")
+#   ],
+#   url: [host: host, port: 80],
+#   secret_key_base: secret_key_base,
+#   server: true
 
 # To get SSL working, you will need to add the `https` key
 # to the previous section and set your `:url` port to 443:
