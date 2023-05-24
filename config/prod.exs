@@ -32,8 +32,11 @@ host =
 
 config :pw_app, PwAppWeb.Endpoint,
   # Possibly not needed, but doesn't hurt
-  http: [port: {:system, "PORT"}],
-  url: [host: host, port: 443],
+  http: [
+    ip: {0, 0, 0, 0, 0, 0, 0, 0},
+    port: String.to_integer(System.get_env("PORT") || "4000")
+  ],
+  url: [host: host, port: 80],
   secret_key_base: secret_key_base,
   server: true
 
