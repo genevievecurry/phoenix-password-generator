@@ -11,7 +11,7 @@ use Mix.Config
 # before starting your production server.
 config :pw_app, PwAppWeb.Endpoint,
   load_from_system_env: true,
-  url: [host: "https://phoenix-password-generator.fly.dev/", port: 4000],
+  url: [host: "https://phoenix-password-generator.fly.dev/", port: 8080],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -55,9 +55,11 @@ config :logger, level: :info
 # and configuration from environment variables.
 # import_config "prod.secret.exs"
 
-# config :pw_app, PwAppWeb.Endpoint,
-#   # Possibly not needed, but doesn't hurt
-#   http: [port: {:system, "PORT"}],
-#   url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 443],
-#   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
-#   server: true
+host = System.get_env("PHX_HOST") || "example.com"
+
+config :pw_app, PwAppWeb.Endpoint,
+  # Possibly not needed, but doesn't hurt
+  http: [port: {:system, "PORT"}],
+  url: [host: host, port: 443],
+  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
+  server: true

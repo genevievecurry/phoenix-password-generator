@@ -71,8 +71,6 @@ COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/pw_app ./
 
 ENV HOME=/app
 ENV MIX_ENV=prod
-ENV SECRET_KEY_BASE=nokey
-ENV PORT=4000
 
 CMD ["bin/pw_app", "start"]
 
