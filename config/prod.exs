@@ -61,7 +61,7 @@ secret_key_base =
     You can generate one by calling: mix phx.gen.secret
     """
 
-host = System.get_env("PHX_HOST") || "example.com"
+host = System.get_env("PHX_HOST") || "https://phoenix-password-generator.fly.dev"
 
 config :pw_app, PwAppWeb.Endpoint,
   # Possibly not needed, but doesn't hurt
