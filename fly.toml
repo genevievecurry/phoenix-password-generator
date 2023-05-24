@@ -5,7 +5,7 @@ processes = []
 
 [env]
   PHX_HOST = "phoenix-password-generator.fly.dev"
-  PORT = "8080"
+  PORT = "4000"
 
 [experimental]
   auto_rollback = true
