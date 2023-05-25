@@ -27,9 +27,9 @@ secret_key_base =
 config :pw_app, PwAppWeb.Endpoint,
   # Possibly not needed, but doesn't hurt
   http: [
-    port: String.to_integer(System.get_env("PORT") || "4000")
+    port: String.to_integer(System.get_env("PORT") || "8080")
   ],
-  url: [host: "phoenix-password-generator.fly.dev", port: 4000],
+  url: [host: "phoenix-password-generator.fly.dev", port: 443],
   secret_key_base: secret_key_base,
   server: true
 
