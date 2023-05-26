@@ -10,9 +10,9 @@ For "brute-force attack resistance", [zxcvbn](https://github.com/dropbox/zxcvbn)
 - Preventing offline cracking by selecting a suitably slow hash function with user-unique salts.
 - Securing said password hashes.
 
-## Live Demo on Gigalixir
+## Live Demo on Fly.io
 
-[https://gross-warped-trogon.gigalixirapp.com](https://gross-warped-trogon.gigalixirapp.com)
+[https://phoenix-password-generator.fly.dev/](https://phoenix-password-generator.fly.dev/)
 
 ## Screenshots
 
@@ -28,12 +28,27 @@ For "brute-force attack resistance", [zxcvbn](https://github.com/dropbox/zxcvbn)
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-## To-Do
+## Manually Deploying to Fly.io
 
-- Write Documentation!
-- Write Tests!
-- Browser Testing!
-- Make it responsive?
+`fly deploy`
+
+If you don't have the Fly.io CLI installed, see the next section for more information.
+
+### Fly.io Setup
+
+You will need to install [`flyctl`](https://fly.io/docs/hands-on/install-flyctl/) in order to manually deploy to Fly.io.
+
+After installing their CLI, use `fly auth signup` to sign up for an account with your GitHub credentials.
+
+Run `fly ssh issue --agent` to setup SSH for Fly.io.
+
+**Deploy Command**
+
+`fly deploy`
+
+**SSH into Remote App IEx shell**
+
+`fly ssh console -C "app/bin/stubs remote"`
 
 ## Learn more
 
